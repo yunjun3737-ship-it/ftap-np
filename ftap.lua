@@ -248,11 +248,10 @@ end
 SpawnCFrame()
  SCF = workspace.SpawnCF
 
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/NP01223/NP/refs/heads/main/RayField'))()
-
-
-
-loadstring(game:HttpGet('https://raw.githubusercontent.com/dosi1100-cmyk/script/refs/heads/main/kk'))()
+-- ================== Rayfield 안정 버전 (Build Mismatch 해결) ==================
+print("Rayfield 로드 시작...")
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+print("Rayfield 로드 완료")
 
 G = rs.GrabEvents
 G:WaitForChild("EndGrabEarly"):Destroy()
