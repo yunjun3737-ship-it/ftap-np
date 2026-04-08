@@ -249,9 +249,9 @@ SpawnCFrame()
  SCF = workspace.SpawnCF
 
 -- ================== Rayfield 안정 버전 (Build Mismatch 해결) ==================
-print("Rayfield 로드 시작...")
+print("Rayfield 로드 시작움직이면 뒤진다 시발새끼야")
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-print("Rayfield 로드 완료")
+print("로드 완료 알파카가업그러이드시킴")
 
 G = rs.GrabEvents
 G:WaitForChild("EndGrabEarly"):Destroy()
