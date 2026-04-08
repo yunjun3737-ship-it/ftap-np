@@ -251,7 +251,7 @@ SpawnCFrame()
 -- ================== Rayfield 안정 버전 (Build Mismatch 해결) ==================
 print("Rayfield 로드 시작움직이면 뒤진다 시발새끼야")
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-print("로드 완료 알파카가업그러이드시킴")
+print("로드 완료 알림:이핵은 사용한사람의 닉을 땁니다 기린이같은 좆같은새끼가 쳐쓰는순간 뒤집니다 시발")
 
 G = rs.GrabEvents
 G:WaitForChild("EndGrabEarly"):Destroy()
