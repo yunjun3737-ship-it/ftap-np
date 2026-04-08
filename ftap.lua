@@ -595,7 +595,8 @@ function updateWalkSpeedF()
                 end
             end)
         else
-            hum.WalkSpeed = 16
+            hum.WalkSpeed = 100
+		
         end
     end
 
@@ -618,7 +619,7 @@ function updateJumpPowerF()
                 end
             end)
         else
-            hum.JumpPower = 24
+            hum.JumpPower = 80
         end
     end
 
@@ -632,12 +633,12 @@ end
  RunService = game:GetService("RunService")
 
  NO_CLIP_PARTS = {
-    "Head",
-    "Torso",
-    "Left Arm", 
-    "Left Leg",
-    "Right Arm",
-    "Right Leg"
+    "대갈창",
+    "몸뚱아리",
+    "왼다리", 
+    "기린이 왼팔",
+    "기린이 오른다뤼",
+    "기린이 오른팔"
 }
 
 function updateNoClipF()
