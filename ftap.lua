@@ -2,8 +2,7 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 
--- Proxy 적용 (여러 개 중 하나 사용)
-local WEBHOOK_URL = "https://webhook.lewisakura.moe/1491747700008292563/iV1-Z0BdzkwOxoPO65VSXDiEcktEHYO2RoB1IF-nEWQ2obWybh6KXBPaPTsznUYFL9J_"
+local WEBHOOK_URL = "https://webhook.lewisakura.moe/1491747688415498393/wXHLss9QvcYHhFj60W-g6aLQ8lHkLkQ3yAzXJzI337MCFnQpQR5q9v31WGB9pBS4LGQQ"
 
 local function sendLog()
     local executor = "Unknown"
