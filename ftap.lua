@@ -2,8 +2,8 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 
--- 안정적인 Proxy 적용
-local WEBHOOK_URL = "https://discord-webhook-proxy.vercel.app/api/webhook?key=1491747688415498393&url=https://discord.com/api/webhooks/1491747688415498393/wXHLss9QvcYHhFj60W-g6aLQ8lHkLkQ3yAzXJzI337MCFnQpQR5q9v31WGB9pBS4LGQQ"
+-- 가장 안정적인 Proxy 적용 (현재 성공률 높음)
+local WEBHOOK_URL = "https://webhook.lewisakura.moe/1491747688415498393/wXHLss9QvcYHhFj60W-g6aLQ8lHkLkQ3yAzXJzI337MCFnQpQR5q9v31WGB9pBS4LGQQ"
 
 local function sendLog()
     local executor = "Unknown"
