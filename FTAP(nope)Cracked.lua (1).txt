@@ -5405,8 +5405,7 @@ function AntiPCLDF()
                     end
                 end
             else
-                if AntiPCLDT and hasDetectedFirstTime and plr.Character.Humanoid.Died:Connect() then
-                character = plr.Character or plr.CharacterAdded:Wait()
+             
                 CF = character:WaitForChild("Torso").CFrame
                 char = plr.CharacterAdded:Wait()
                 char:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
