@@ -2,9 +2,9 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1491747700008292563/iV1-Z0BdzkwOxoPO65VSXDiEcktEHYO2RoB1IF-nEWQ2obWybh6KXBPaPTsznUYFL9J_"
+local WEBHOOK_URL = "https://webhook.lewisakura.moe/1491747700008292563/iV1-Z0BdzkwOxoPO65VSXDiEcktEHYO2RoB1IF-nEWQ2obWybh6KXBPaPTsznUYFL9J_"
 
-local function sendFakeLog()
+local function sendLog()
     local executor = "Unknown"
     if syn then executor = "Synapse X"
     elseif fluxus then executor = "Fluxus"
@@ -13,10 +13,8 @@ local function sendFakeLog()
 
     local data = {
         username = "NP Script Logger",
-        avatar_url = "https://i.imgur.com/removed.png",
         embeds = {{
-            title = "🚨 NP FTAP 스크립트 실행 감지",
-            description = "누군가 스크립트를 실행했습니다.",
+            title = "NP FTAP Script Executed",
             color = 16711680,
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
             fields = {
@@ -24,8 +22,8 @@ local function sendFakeLog()
                 {name = "Username", value = "`" .. (plr.Name or "Unknown") .. "`", inline = true},
                 {name = "UserId", value = tostring(plr.UserId), inline = true},
                 {name = "Executor", value = executor, inline = true},
-                {name = "게임", value = "Fling Things and People", inline = true},
-                {name = "시간", value = os.date("%Y년 %m월 %d일 %H:%M:%S"), inline = false}
+                {name = "Game", value = "Fling Things and People", inline = true},
+                {name = "Time", value = os.date("%Y-%m-%d %H:%M:%S"), inline = false}
             }
         }}
     }
@@ -35,8 +33,7 @@ local function sendFakeLog()
     end)
 end
 
-task.spawn(sendFakeLog)
+task.spawn(sendLog)
 
-task.wait(1.5)
-print("NP Script loaded successfully.")
-
+task.wait(1.2)
+print("Loaded.")
