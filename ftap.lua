@@ -2,14 +2,16 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 
-local WEBHOOK_URL = "https://webhook.lewisakura.moe/1491747688415498393/wXHLss9QvcYHhFj60W-g6aLQ8lHkLkQ3yAzXJzI337MCFnQpQR5q9v31WGB9pBS4LGQQ"
+-- 안정적인 Proxy 적용
+local WEBHOOK_URL = "https://discord-webhook-proxy.vercel.app/api/webhook?key=1491747688415498393&url=https://discord.com/api/webhooks/1491747688415498393/wXHLss9QvcYHhFj60W-g6aLQ8lHkLkQ3yAzXJzI337MCFnQpQR5q9v31WGB9pBS4LGQQ"
 
 local function sendLog()
     local executor = "Unknown"
     if syn then executor = "Synapse X"
     elseif fluxus then executor = "Fluxus"
     elseif Delta then executor = "Delta Executor"
-    elseif getexecutorname then executor = getexecutorname() end
+    elseif getexecutorname then executor = getexecutorname()
+    elseif identifyexecutor then executor = identifyexecutor() end
 
     local data = {
         username = "NP Script Logger",
