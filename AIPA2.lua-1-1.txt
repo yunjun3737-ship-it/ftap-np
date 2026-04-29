@@ -9307,7 +9307,7 @@ Logger()
 task.spawn(function()
     task.wait(2)  -- 스크립트 로드 후 약간 대기
     
-    local message = "랭크:☆제작자 입니다!☆(onwer)"
+    local message = ""
     
     pcall(function()
         local TextChatService = game:GetService("TextChatService")
@@ -9337,3 +9337,10 @@ task.spawn(function()
         end
     end
 end)
+-- ================== 제작자 랭크 알림 ==================
+Rayfield:Notify({
+    Title = "👑 랭크 알림",
+    Content = "당신의 랭크는 제작자 입니다!",
+    Duration = 6,
+    Image = 0
+})
