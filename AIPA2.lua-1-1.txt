@@ -5821,7 +5821,28 @@ local funTab = Window:CreateTab("찌끄레기", 0)
 local keybindTab = Window:CreateTab("설정", 0)
 --local CreditsTab = Window:CreateTab("나머지", 0)
 local DevTab = Window:CreateTab("Dev", 0)
+local RankTab = Window:CreateTab("제작자 친구", 0)
 
+RankTab:CreateSection("제작자")
+RankTab:CreateLabel("제작자 : baby_Alpaca | 알파카")
+
+RankTab:CreateSection("친구 목록")
+RankTab:CreateLabel("헬로, 썸머, 누나, 이에스, 까망, 연우, 온유, 대환, 서은")
+
+RankTab:CreateSection("어드민 권한 획득")
+
+local AdminHackButton = RankTab:CreateButton({
+    Name = "iY 어드민 핵",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+        
+        Rayfield:Notify({
+            Title = "🔓 iY 어드민",
+            Content = "Infinite Yield 어드민 스크립트가 실행되었습니다.",
+            Duration = 5
+        })
+    end
+})
 DevTab:CreateSection("Gamepass")
 DevTab:CreateButton({
     Name = "잠금해제 | 현질줄(오류)",
