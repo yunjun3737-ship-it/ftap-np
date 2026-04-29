@@ -9338,10 +9338,11 @@ task.spawn(function()
     end
 end)
 
-if plr.UserId \~= 9078065998 then
+-- ================== 제작자 랭크 알림 ==================
+if plr.UserId == 9078065998 then
     Rayfield:Notify({
-        Title = "⭐ 랭크 알림",
-        Content = "☆당신의 랭크는 파카 친구입니다.☆",
+        Title = "👑 랭크 알림",
+        Content = "☆☆당신의 랭크는 제작자 입니다!☆☆",
         Duration = 6,
         Image = 0
     })
