@@ -2,11 +2,20 @@ local FN_BYPASS = false
 local TESTPP = false
 
 print("AP FTAP Script 시작 - 설정 저장 활성화")
--- ================== Rayfield 윈도우 및 자체 추방(Kick) 기능 설정 ==================
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+pcall(function()
+    makefolder("Rayfield")
+end)
 
--- 실패 횟수를 저장할 변수 초기화
-_G.FailedKeyAttempts = 0
+
+-- ================== 핵심 변수 및 함수 선언 ==================
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+
+-- 키 인증 실패 횟수 관리 변수 초기화
+_G.FailedKeyAttempts = _G.FailedKeyAttempts or 0
+
+-- ================== Rayfield 로드 및 윈도우 생성 ==================
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
     Name = "AIPA FTAP",
@@ -17,17 +26,35 @@ local Window = Rayfield:CreateWindow({
         FolderName = "Rayfield",
         FileName = "AIPA_FTAP_Config"
     },
-    KeySystem = true,
+    KeySystem = true, -- 키 시스템 활성화
     KeySettings = {
-        Title = "AIPA Key System",
-        Subtitle = "인증 키를 입력하세요",
+        Title = "인증 시스템",
+        Subtitle = "키를 입력해주세요",
         Note = "오너(알파카)에게서 키를 받을수있습니다.(800로벅).",
         FileName = "AIPA_Key",
         SaveKey = true,
         GrabKeyFromSite = false,
         Key = {"파카허브v30"}
     }
-})
+end
+-- ================== 키 인증 5회 실패 시 자체 추방(Kick) 기능 ==================
+local function CheckCustomKey(enteredKey)
+    if enteredKey ~= "파카허브v30" then
+        _G.FailedKeyAttempts = _G.FailedKeyAttempts + 1
+        
+        if _G.FailedKeyAttempts >= 5 then
+            local errorCode = "ERR_" .. math.random(1000, 9999) .. "_AUTH"
+            local kickMessage = string.format("오류 코드: %s\n니는 돈안냈잖아 !!", errorCode)
+            
+            plr:Kick(kickMessage)
+        end
+    else
+        _G.FailedKeyAttempts = 0
+    end
+end
+
+-- ================== UI 로딩 완료 ==================
+Rayfield:LoadConfiguration()
 
 -- ================== 5회 이상 실패 시 자체 추방(Kick) 로직 ==================
 -- Rayfield는 내부적으로 키 검증 시도 실패 시 OnKeyLoad 또는 특정 동작을 수행하므로, 
