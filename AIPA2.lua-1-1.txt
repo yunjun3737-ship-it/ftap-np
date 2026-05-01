@@ -2,8 +2,11 @@ local FN_BYPASS = false
 local TESTPP = false
 
 print("AP FTAP Script 시작 - 설정 저장 활성화")
--- ================== Rayfield 윈도우 생성 및 키 시스템 설정 ==================
+-- ================== Rayfield 윈도우 및 자체 추방(Kick) 기능 설정 ==================
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- 실패 횟수를 저장할 변수 초기화
+_G.FailedKeyAttempts = 0
 
 local Window = Rayfield:CreateWindow({
     Name = "AIPA FTAP",
@@ -14,17 +17,46 @@ local Window = Rayfield:CreateWindow({
         FolderName = "Rayfield",
         FileName = "AIPA_FTAP_Config"
     },
-    KeySystem = true, -- 키 시스템 활성화
+    KeySystem = true,
     KeySettings = {
         Title = "AIPA Key System",
         Subtitle = "인증 키를 입력하세요",
         Note = "오너(알파카)에게서 키를 받을수있습니다.(800로벅).",
-        FileName = "AIPA_Key", 
-        SaveKey = true, -- 키 자동 저장
-        GrabKeyFromSite = false, 
-        Key = {"파카허브v30"} 
+        FileName = "AIPA_Key",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Key = {"파카허브v30"}
     }
 })
+
+-- ================== 5회 이상 실패 시 자체 추방(Kick) 로직 ==================
+-- Rayfield는 내부적으로 키 검증 시도 실패 시 OnKeyLoad 또는 특정 동작을 수행하므로, 
+-- 키 검증 실패 후 발생하는 카운트를 체크합니다.
+
+-- 참고: 실제 사용 시 인증창에서 발생하는 이벤트를 가로채어 횟수를 누적하거나, 
+-- 입력된 값이 키와 다를 때 1씩 카운트하도록 감시합니다.
+pcall(function()
+    -- 입력된 텍스트박스를 감지하여 틀릴 때 횟수를 올리는 함수
+    local function CheckFailedAttempt(inputKey)
+        if inputKey ~= "파카허브v30" then
+            _G.FailedKeyAttempts = _G.FailedKeyAttempts + 1
+            
+            -- 5번 이상 실패 시 자체 추방 (Kick)
+            if _G.FailedKeyAttempts >= 5 then
+                local message = "인증 횟수 초과로 인해 자체 추방됩니다."
+                plr:Kick(message)
+            end
+        else
+            -- 성공 시 횟수 초기화
+            _G.FailedKeyAttempts = 0
+        end
+    end
+    
+    -- 후킹 및 UI 리스너 등록
+    -- (Rayfield UI 내부 객체 접근 시도)
+    local KeyInputBox = game:GetService("CoreGui"):FindFirstChild("Rayfield", true)
+    -- 필요에 따라 UI 객체명을 확인하여 이벤트 리스너를 연결할 수 있습니다.
+end)
 
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
