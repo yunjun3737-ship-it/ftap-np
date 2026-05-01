@@ -1,6 +1,6 @@
 local FN_BYPASS = false
 local TESTPP = false
-
+print(" 허브가 시작되고있는중입니다 made by 파카")
 print("AP FTAP Script 시작 - 설정 저장 활성화")
 -- ================== Rayfield 윈도우 생성 및 키 시스템 설정 ==================
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
@@ -14,7 +14,7 @@ local Window = Rayfield:CreateWindow({
         FolderName = "Rayfield",
         FileName = "AIPA_FTAP_Config"
     },
-    KeySystem = true, -- 키 시스템 활성화
+    KeySystem = true, 
     KeySettings = {
         Title = "AIPA Key System",
         Subtitle = "인증 키를 입력하세요",
