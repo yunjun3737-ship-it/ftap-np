@@ -1,7 +1,5 @@
 local FN_BYPASS = false
 local TESTPP = false
-
-print("AP FTAP Script 시작 - 설정 저장 활성화")
 -- ================== 설정 자동 저장 + 중복 실행 방지 ==================
 if _G.NP_FTAP_LOADED then return end
 _G.NP_FTAP_LOADED = true
@@ -12,22 +10,25 @@ end)
 
 print("AP FTAP Script 시작 - 설정 저장 활성화")
 
+-- ================== Rayfield 로드 ==================
+print("Rayfield 로드 시작...")
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+print("스크립트는 알파카에 의해 만들어졌습니다.")
+
 -- ================== 핵심 변수 및 함수 선언 ==================
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 local cam = workspace.CurrentCamera
 local mouse = plr:GetMouse()
 local uis = game:GetService("UserInputService")
-
--- 로딩 오류 방지를 위해 캐릭터 생성 및 폴더 대기
-local inv = workspace:WaitForChild(plr.Name .. "SpawnedInToys", 5) or workspace
 local rs = game:GetService("ReplicatedStorage")
+
+local inv = workspace:WaitForChild(plr.Name .. "SpawnedInToys", 5) or workspace
+local RepStorage = game:GetService("ReplicatedStorage")
 local rs2 = game:GetService("RunService")
 local deb = game:GetService("Debris")
 
--- ================== Rayfield 로드 및 윈도우 생성 ==================
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
+-- ================== 윈도우 생성 및 키 시스템 설정 ==================
 local Window = Rayfield:CreateWindow({
     Name = "AIPA FTAP",
     LoadingTitle = "AIPA Script Loading",
@@ -42,12 +43,15 @@ local Window = Rayfield:CreateWindow({
         Title = "AIPA Key System",
         Subtitle = "인증 키를 입력하세요",
         Note = "오너(알파카)에게서 키를 받을 수 있습니다. (800로벅)",
-        FileName = "AIPA_Key", -- 키가 저장되는 파일 이름
-        SaveKey = true,      -- 키 자동 저장 활성화 (한 번 입력하면 기억함)
+        FileName = "AIPA_Key", -- 입력한 키가 저장되는 파일 이름
+        SaveKey = true,      -- 키 자동 저장 (한 번 입력 후 기억)
         GrabKeyFromSite = false,
         Key = {"파카허브v30"}  -- 사용할 인증 키
     }
 })
+
+-- UI 구성 및 설정 불러오기
+Rayfield:LoadConfiguration()
 
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
