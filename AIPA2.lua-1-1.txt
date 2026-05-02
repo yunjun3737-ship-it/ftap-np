@@ -7810,29 +7810,27 @@ local AntiGrabSticky = antiTab:CreateToggle({
         end
     end
 })
--- ================== 안티 네트워크 (햄버거) ==================
-local AntiNetworkHamburger = false
-local AntiNetworkConnection = nil
+-- ================== 안티 인풋 (햄버거 네트워크 강탈) ==================
+local AntiInputHamburger = true  -- 자동 ON
+local AntiInputConn = nil
 
-local function AntiHamburgerNetwork()   -- ← 이게 함수입니다
-    if AntiNetworkConnection then 
-        AntiNetworkConnection:Disconnect() 
-        AntiNetworkConnection = nil 
-    end
-    
-    AntiNetworkConnection = game:GetService("RunService").Heartbeat:Connect(function()
-        if not AntiNetworkHamburger then return end
+local function StartAntiInputHamburger()
+    if AntiInputConn then AntiInputConn:Disconnect() end
 
-        for _, item in ipairs(workspace:GetDescendants()) do
-            if item.Name == "Hamburger" or item.Name:find("Hamburger") then
-                local primary = item:FindFirstChild("PrimaryPart") 
-                             or item:FindFirstChildWhichIsA("BasePart")
+    AntiInputConn = game:GetService("RunService").Heartbeat:Connect(function()
+        if not AntiInputHamburger then return end
+
+        for _, hamburger in ipairs(workspace:GetDescendants()) do
+            if hamburger.Name == "Hamburger" then
+                local rootPart = hamburger:FindFirstChild("PrimaryPart") 
+                              or hamburger:FindFirstChildWhichIsA("BasePart")
                 
-                if primary then
+                if rootPart then
                     pcall(function()
-                        rs.GrabEvents.SetNetworkOwner:FireServer(primary, primary.CFrame)
-                        task.wait(0.025)
-                        rs.GrabEvents.DestroyGrabLine:FireServer(primary, primary.CFrame)
+                
+                        rs.GrabEvents.SetNetworkOwner:FireServer(rootPart, rootPart.CFrame)
+                        task.wait(0.015)  
+                        rs.GrabEvents.DestroyGrabLine:FireServer(rootPart, rootPart.CFrame)
                     end)
                 end
             end
@@ -7840,18 +7838,21 @@ local function AntiHamburgerNetwork()   -- ← 이게 함수입니다
     end)
 end
 
+AntiTab:CreateSection("Anti Input - Hamburger")
+
 AntiTab:CreateToggle({
-    Name = "안티 네트워크 (햄버거)",
-    CurrentValue = true,        -- 자동 ON
-    Flag = "AntiHamburgerNet",
+    Name = "안티 인풋 (햄버거)",
+    CurrentValue = true,   -- 시작하자마자 ON
+    Flag = "AntiInputHam",
     Callback = function(Value)
-        AntiNetworkHamburger = Value
+        AntiInputHamburger = Value
         if Value then
-            AntiHamburgerNetwork()
+            StartAntiInputHamburger()
+            Rayfield:Notify({Title = "✅ Anti Input", Content = "햄버거 네트워크 강탈 활성화", Duration = 3})
         else
-            if AntiNetworkConnection then 
-                AntiNetworkConnection:Disconnect() 
-                AntiNetworkConnection = nil 
+            if AntiInputConn then 
+                AntiInputConn:Disconnect() 
+                AntiInputConn = nil 
             end
         end
     end
