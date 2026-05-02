@@ -1549,6 +1549,49 @@ function SitAuraF()
         end
     end)
 end
+local function toggleTPUI(state)
+    tpEnabled = state
+    if state then
+        tpGui = Instance.new("ScreenGui")
+        tpGui.Name = "AlpacaMobileTPSystem"
+        tpGui.Parent = game.CoreGui -- Delta/Xeno/ 등 실행기가 CoreGui 권한을 가짐
+        
+       
+        local tpBtn = Instance.new("TextButton")
+        tpBtn.Name = "ElegantMobileTPButton"
+        tpBtn.Parent = tpGui
+        
+        
+        tpBtn.Position = UDim2.new(1, -127, 1, -127) 
+        tpBtn.Size = UDim2.new(0, 60, 0, 60) 
+        
+       
+        tpBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20) 
+        tpBtn.BackgroundTransparency = 0.4
+        tpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tpBtn.Text = "TP"
+        tpBtn.Font = Enum.Font.SourceSansBold
+        tpBtn.TextSize = 17
+        tpBtn.BorderSizePixel = 0
+        
+        local uiCornerBtn = Instance.new("UICorner")
+        uiCornerBtn.CornerRadius = UDim.new(1, 0) 
+        uiCornerBtn.Parent = tpBtn
+        
+        
+        local uiStroke = Instance.new("UIStroke")
+        uiStroke.Color = Color3.fromRGB(0, 217, 255) 
+        uiStroke.Thickness = 2.5
+        uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        uiStroke.Parent = tpBtn
+
+        
+        tpBtn.MouseButton1Click:Connect(performTeleport)
+    else
+        if tpGui then tpGui:Destroy() tpGui = nil end
+    end
+end
+
 
     task.spawn(function()
         rs:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction"):InvokeServer(
@@ -5864,6 +5907,107 @@ DevTab:CreateButton({
 
     end
 })
+-- ================== 모바일 크로스헤어 TP (DevTab) ==================
+DevTab:CreateSection("Mobile Crosshair TP")
+
+local tpGui = nil
+local tpEnabled = true
+local camera = workspace.CurrentCamera
+local lp = game.Players.LocalPlayer
+
+local function performTeleport()
+    local char = lp.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+    local root = char.HumanoidRootPart
+    local unitRay = camera:ViewportPointToRay(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {char}
+    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+    raycastParams.IgnoreWater = true
+
+    local result = workspace:Raycast(unitRay.Origin, unitRay.Direction * 1500, raycastParams)
+    
+    local targetPos = result and (result.Position + Vector3.new(0, 4, 0)) 
+                     or (unitRay.Origin + unitRay.Direction * 200)
+
+    root.CFrame = CFrame.new(targetPos) * CFrame.Angles(0, root.CFrame.Rotation.Y, 0)
+end
+
+local function createMobileTPButton()
+    if tpGui then tpGui:Destroy() end
+    
+    tpGui = Instance.new("ScreenGui")
+    tpGui.Name = "AlpacaMobileTP"
+    tpGui.ResetOnSpawn = false
+    tpGui.Parent = game:GetService("CoreGui")
+
+    local btn = Instance.new("TextButton")
+    btn.Name = "TPButton"
+    btn.Parent = tpGui
+    btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    btn.BackgroundTransparency = 0.35
+    btn.Text = "TP"
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 18
+    btn.Size = UDim2.new(0, 65, 0, 65)
+    btn.Position = UDim2.new(1, -85, 1, -150)
+    btn.BorderSizePixel = 0
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1, 0)
+    corner.Parent = btn
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(0, 180, 255)
+    stroke.Thickness = 3
+    stroke.Parent = btn
+
+    -- 드래그 기능
+    local dragging, dragInput, mousePos, framePos
+    btn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            mousePos = input.Position
+            framePos = btn.Position
+        end
+    end)
+
+    btn.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - mousePos
+            btn.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+        end
+    end)
+
+    btn.MouseButton1Click:Connect(performTeleport)
+end
+
+DevTab:CreateToggle({
+    Name = "Mobile Crosshair TP (기본 ON)",
+    CurrentValue = true,   -- ← 스크립트 실행 시 자동 ON
+    Flag = "MobileTPDev",
+    Callback = function(Value)
+        tpEnabled = Value
+        if Value then
+            createMobileTPButton()
+            Rayfield:Notify({Title = "✅ Mobile TP", Content = "크로스헤어 TP 활성화 (버튼 드래그 가능)", Duration = 4})
+        else
+            if tpGui then 
+                tpGui:Destroy() 
+                tpGui = nil 
+            end
+        end
+    end
+})
 
 DevTab:CreateSection("Gam")
 DevTab:CreateToggle({
@@ -6053,7 +6197,14 @@ DevTab:CreateToggle({
         end
     end
 })
-
+devTab:CreateToggle({
+    Name = "tp버튼 추가",
+    CurrentValue = false,
+    Flag = "TPToggle_Mobile",
+    Callback = function(Value)
+        toggleTPUI(Value)
+    end
+})
 DevTab:CreateSection("Tweened Objects")
 DevTab:CreateButton({
     Name = "열차조종",
