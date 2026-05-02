@@ -1441,6 +1441,18 @@ function OwnerLoopKickF()
         end)
     end
 end
+local function createDevTab()
+    local DevTab = Window:CreateTab("Dev", "code")
+
+    DevTab:CreateToggle({
+        Name = "Enable Crosshair TP System",
+        CurrentValue = false,
+        Flag = "TPToggle_Dev",
+        Callback = function(Value)
+            toggleTPUI(Value)
+        end
+    })
+end
 
     for _, other in ipairs(game.Players:GetPlayers()) do
         if other ~= plr then
@@ -5877,6 +5889,15 @@ DevTab:CreateToggle({
         end
     end
 })
+    DevTab:CreateToggle({
+        Name = "Enable Crosshair TP System",
+        CurrentValue = true,
+        Flag = "TPToggle_Dev",
+        Callback = function(Value)
+            toggleTPUI(Value)
+        end
+    })
+end
 
 headMatrix = {0,0,0,0,0,0,0,1,0}
 torsoMatrix = {0,0,0,0,0,0,0,1,0}
