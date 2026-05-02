@@ -5,7 +5,6 @@ print("AP FTAP Script 시작 - 설정 저장 활성화")
 -- ================== Rayfield 윈도우 생성 및 키 시스템 설정 ==================
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local Window = Rayfield:CreateWindow({
     Name = "AIPA FTAP",
     LoadingTitle = "AIPA Script Loading",
     LoadingSubtitle = "by Alpaca",
