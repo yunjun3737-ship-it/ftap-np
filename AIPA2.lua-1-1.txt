@@ -36,6 +36,7 @@ local keybindTab = Window:CreateTab("설정", 0)
 --local CreditsTab = Window:CreateTab("나머지", 0)
 local DevTab = Window:CreateTab("잡기능", 0)
 local RankTab = Window:CreateTab("제작자 친구", 0)
+local GodTab = Window:CreateTab("GodMode", 0)
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
 cam = workspace.CurrentCamera
@@ -5920,6 +5921,138 @@ DevTab:CreateToggle({
     end
 })
 
+GodTab:CreateSection("Anti Features")
+
+-- 안티 네트워크 (햄버거)
+local antiInputConn = nil
+GodTab:CreateToggle({
+    Name = "안티 인풋 (햄버거)",
+    CurrentValue = true,
+    Callback = function(v)
+        if v then
+            antiInputConn = game:GetService("RunService").Heartbeat:Connect(function()
+                for _, ham in ipairs(workspace:GetDescendants()) do
+                    if ham.Name == "Hamburger" then
+                        local part = ham:FindFirstChildWhichIsA("BasePart")
+                        if part then
+                            pcall(function()
+                                rs.GrabEvents.SetNetworkOwner:FireServer(part, part.CFrame)
+                                rs.GrabEvents.DestroyGrabLine:FireServer(part, part.CFrame)
+                            end)
+                        end
+                    end
+                end
+            end)
+        else
+            if antiInputConn then antiInputConn:Disconnect() end
+        end
+    end
+})
+
+GodTab:CreateSection("Utility")
+
+-- 노클립
+GodTab:CreateToggle({
+    Name = "영구 노클립",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            game:GetService("RunService").Stepped:Connect(function()
+                local char = plr.Character
+                if char then
+                    for _, part in pairs(char:GetChildren()) do
+                        if part:IsA("BasePart") then part.CanCollide = false end
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- 무적
+GodTab:CreateToggle({
+    Name = "무적 (Health Lock)",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            task.spawn(function()
+                while v do
+                    local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+                    if hum then hum.Health = 100 end
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end
+})
+
+GodTab:CreateSection("Troll / Combat")
+
+-- Kill Aura
+GodTab:CreateToggle({
+    Name = "킬 아우라",
+    CurrentValue = false,
+    Callback = function(v)
+        KillAuraT = v
+        KillAuraF()
+    end
+})
+
+-- Fling Aura
+GodTab:CreateToggle({
+    Name = "플링 아우라",
+    CurrentValue = false,
+    Callback = function(v)
+        FlingAuraT = v
+        FlingAuraF()
+    end
+})
+
+
+GodTab:CreateButton({
+    Name = "랜덤tp",
+    Callback = function()
+        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = CFrame.new(math.random(-500,500), 50, math.random(-500,500))
+        end
+    end
+})
+
+-- Mobile TP (Crosshair)
+local tpGui = nil
+GodTab:CreateToggle({
+    Name = "모바일 tp(강화)",
+    CurrentValue = true,
+    Callback = function(v)
+        if v then
+            -- 이전에 준 TP 버튼 코드
+            if tpGui then tpGui:Destroy() end
+            tpGui = Instance.new("ScreenGui")
+            tpGui.Parent = game.CoreGui
+            local btn = Instance.new("TextButton", tpGui)
+            btn.Size = UDim2.new(0,70,0,70)
+            btn.Position = UDim2.new(1,-90,1,-160)
+            btn.BackgroundColor3 = Color3.fromRGB(20,20,20)
+            btn.Text = "TP"
+            btn.TextColor3 = Color3.new(1,1,1)
+            btn.MouseButton1Click:Connect(function()
+                performTeleport()  -- 이전에 정의된 함수 사용
+            end)
+        else
+            if tpGui then tpGui:Destroy() end
+        end
+    end
+})
+
+GodTab:CreateButton({
+    Name = "모든 플러이어 닉 프린트",
+    Callback = function()
+        for _, p in ipairs(Players:GetPlayers()) do
+            print(p.Name .. " | " .. p.DisplayName)
+        end
+    end
+})
 
 RankTab:CreateSection("제작자")
 RankTab:CreateLabel("제작자 : baby_Alpaca | 알파카")
