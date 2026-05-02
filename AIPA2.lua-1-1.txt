@@ -5923,10 +5923,10 @@ DevTab:CreateToggle({
 
 GodTab:CreateSection("Anti Features")
 
--- 안티 네트워크 (햄버거)
+-- 안티 네트워크 
 local antiInputConn = nil
 GodTab:CreateToggle({
-    Name = "안티 인풋 (햄버거)",
+    Name = "안티 인풋 (오토)",
     CurrentValue = true,
     Callback = function(v)
         if v then
@@ -5952,7 +5952,7 @@ GodTab:CreateToggle({
 GodTab:CreateSection("Utility")
 
 -- 노클립
-GodTab:CreateToggle({
+GodTab:CreateButton({
     Name = "영구 노클립",
     CurrentValue = false,
     Callback = function(v)
@@ -5988,9 +5988,9 @@ GodTab:CreateToggle({
 
 GodTab:CreateSection("Troll / Combat")
 
--- Kill Aura
+
 GodTab:CreateToggle({
-    Name = "킬 아우라",
+    Name = "인풋 아우라",
     CurrentValue = false,
     Callback = function(v)
         KillAuraT = v
@@ -5998,9 +5998,9 @@ GodTab:CreateToggle({
     end
 })
 
--- Fling Aura
+
 GodTab:CreateToggle({
-    Name = "플링 아우라",
+    Name = "아무기느멊음",
     CurrentValue = false,
     Callback = function(v)
         FlingAuraT = v
@@ -6054,6 +6054,90 @@ GodTab:CreateButton({
     end
 })
 
+GodTab:CreateSection("Extra Functions")
+
+-- 1. 무한 점프 함수
+local infJumpConnection = nil
+local function EnableInfiniteJump()
+    if infJumpConnection then infJumpConnection:Disconnect() end
+    infJumpConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
+        local humanoid = plr.Character and plr.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end)
+end
+
+GodTab:CreateToggle({
+    Name = "무한 점프",
+    CurrentValue = false,
+    Callback = function(Value)
+        if Value then
+            EnableInfiniteJump()
+        else
+            if infJumpConnection then 
+                infJumpConnection:Disconnect() 
+            end
+        end
+    end
+})
+
+-- 2. Super Speed
+GodTab:CreateToggle({
+    Name = "슈퍼 스피드",
+    CurrentValue = false,
+    Callback = function(Value)
+        local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+        if hum then
+            hum.WalkSpeed = Value and 120 or 16
+        end
+    end
+})
+
+-- 3. Anti Ragdoll
+GodTab:CreateToggle({
+    Name = "안티 래그돌",
+    CurrentValue = false,
+    Callback = function(Value)
+        if Value then
+            task.spawn(function()
+                while Value do
+                    local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+                    if hum and hum:FindFirstChild("Ragdolled") then
+                        hum.Ragdolled.Value = false
+                    end
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end
+})
+
+-- 4. Platform Stand (공중에 떠있기)
+GodTab:CreateToggle({
+    Name = "플랫폼 스탠드",
+    CurrentValue = false,
+    Callback = function(Value)
+        local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+        if hum then
+            hum.PlatformStand = Value
+        end
+    end
+})
+
+-- 5. Gravity Control
+GodTab:CreateToggle({
+    Name = "저중력 (Gravity)",
+    CurrentValue = false,
+    Callback = function(Value)
+        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.AssemblyLinearVelocity = Value and Vector3.new(0, 50, 0) or Vector3.new(0,0,0)
+        end
+    end
+})
+
+print("GodMode - Extra Functions Added")
 RankTab:CreateSection("제작자")
 RankTab:CreateLabel("제작자 : baby_Alpaca | 알파카")
 
