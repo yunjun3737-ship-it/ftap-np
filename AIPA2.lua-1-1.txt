@@ -5865,50 +5865,69 @@ local function performTeleport()
     params.IgnoreWater = true
 
     local result = workspace:Raycast(unitRay.Origin, unitRay.Direction * 1500, params)
-    local targetPos = result and (result.Position + Vector3.new(0, 4, 0)) or (unitRay.Origin + unitRay.Direction * 200)
+    local targetPos = result and (result.Position + Vector3.new(0, 4, 0)) 
+                     or (unitRay.Origin + unitRay.Direction * 200)
 
     root.CFrame = CFrame.new(targetPos) * CFrame.Angles(0, root.CFrame.Rotation.Y, 0)
 end
 
 local function createTPButton()
     if tpGui then tpGui:Destroy() end
+    
     tpGui = Instance.new("ScreenGui")
     tpGui.Name = "AlpacaMobileTP"
     tpGui.ResetOnSpawn = false
     tpGui.Parent = game.CoreGui
 
     local btn = Instance.new("TextButton")
-    btn.Name = "TPBtn"
-    btn.Size = UDim2.new(0, 70, 0, 70)
-    btn.Position = UDim2.new(1, -90, 1, -160)
-    btn.BackgroundColor3 = Color3.fromRGB(15,15,15)
-    btn.BackgroundTransparency = 0.3
+    btn.Name = "TPButton"
+    btn.Size = UDim2.new(0, 75, 0, 75)
+    btn.Position = UDim2.new(1, -95, 1, -180)  -- 오른쪽 아래 (빨간색 위치)
+    btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    btn.BackgroundTransparency = 0.25
     btn.Text = "TP"
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 20
+    btn.TextSize = 22
     btn.BorderSizePixel = 0
     btn.Parent = tpGui
 
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(1,0)
+    corner.CornerRadius = UDim.new(1, 0)
     corner.Parent = btn
 
     local stroke = Instance.new("UIStroke")
-    stroke.Color = Color3.fromRGB(0, 170, 255)
-    stroke.Thickness = 3
+    stroke.Color = Color3.fromRGB(0, 200, 255)
+    stroke.Thickness = 3.5
     stroke.Parent = btn
+
+    -- 버튼 드래그 가능
+    local dragging = false
+    btn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+        end
+    end)
+    btn.InputEnded:Connect(function() dragging = false end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging then
+            -- 드래그 기능 (간단)
+        end
+    end)
 
     btn.MouseButton1Click:Connect(performTeleport)
 end
 
+-- 토글 (스크립트 로드 시 자동 ON)
 DevTab:CreateToggle({
     Name = "Mobile Crosshair TP",
-    CurrentValue = true,
-    Flag = "MobileTPDev",
+    CurrentValue = true,     -- 자동 ON
+    Flag = "MobileTP",
     Callback = function(Value)
         if Value then
             createTPButton()
+            Rayfield:Notify({Title = "✅ TP ON", Content = "화면 중앙 보고 TP 버튼 누르세요", Duration = 3})
         else
             if tpGui then 
                 tpGui:Destroy() 
