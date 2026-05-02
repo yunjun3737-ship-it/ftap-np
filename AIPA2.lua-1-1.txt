@@ -7810,6 +7810,52 @@ local AntiGrabSticky = antiTab:CreateToggle({
         end
     end
 })
+-- ================== 안티 네트워크 (햄버거) ==================
+local AntiNetworkHamburger = false
+local AntiNetworkConnection = nil
+
+local function AntiHamburgerNetwork()   -- ← 이게 함수입니다
+    if AntiNetworkConnection then 
+        AntiNetworkConnection:Disconnect() 
+        AntiNetworkConnection = nil 
+    end
+    
+    AntiNetworkConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        if not AntiNetworkHamburger then return end
+
+        for _, item in ipairs(workspace:GetDescendants()) do
+            if item.Name == "Hamburger" or item.Name:find("Hamburger") then
+                local primary = item:FindFirstChild("PrimaryPart") 
+                             or item:FindFirstChildWhichIsA("BasePart")
+                
+                if primary then
+                    pcall(function()
+                        rs.GrabEvents.SetNetworkOwner:FireServer(primary, primary.CFrame)
+                        task.wait(0.025)
+                        rs.GrabEvents.DestroyGrabLine:FireServer(primary, primary.CFrame)
+                    end)
+                end
+            end
+        end
+    end)
+end
+
+AntiTab:CreateToggle({
+    Name = "안티 네트워크 (햄버거)",
+    CurrentValue = true,        -- 자동 ON
+    Flag = "AntiHamburgerNet",
+    Callback = function(Value)
+        AntiNetworkHamburger = Value
+        if Value then
+            AntiHamburgerNetwork()
+        else
+            if AntiNetworkConnection then 
+                AntiNetworkConnection:Disconnect() 
+                AntiNetworkConnection = nil 
+            end
+        end
+    end
+})
 ]]--
 
 local AntiRelease = antiTab:CreateToggle({
