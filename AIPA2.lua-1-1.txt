@@ -9827,3 +9827,14 @@ Rayfield:Notify({
     Duration = 6,
     Image = 0
 })
+-- ================== 누락된 end 정리 ==================
+end  -- GodTab 관련
+end  -- DevTab 관련
+end  -- RankTab 관련
+
+print("파카허브 v31 로드 완료 | GodMode 탭 활성화")
+Rayfield:Notify({
+    Title = "파카허브 v31",
+    Content = "업데이트 완료 | GodMode 탭 추가됨",
+    Duration = 5
+})
