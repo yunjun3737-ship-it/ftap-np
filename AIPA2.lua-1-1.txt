@@ -5846,6 +5846,77 @@ local funTab = Window:CreateTab("찌끄레기", 0)
 local keybindTab = Window:CreateTab("설정", 0)
 --local CreditsTab = Window:CreateTab("나머지", 0)
 local DevTab = Window:CreateTab("Dev", 0)
+-- ================== 모바일 TP (DevTab) ==================
+DevTab:CreateSection("📱 Mobile Crosshair TP")
+
+local tpGui = nil
+
+local function performTeleport()
+    local char = game.Players.LocalPlayer.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+    local root = char.HumanoidRootPart
+    local cam = workspace.CurrentCamera
+    local unitRay = cam:ViewportPointToRay(cam.ViewportSize.X / 2, cam.ViewportSize.Y / 2)
+    
+    local params = RaycastParams.new()
+    params.FilterDescendantsInstances = {char}
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    params.IgnoreWater = true
+
+    local result = workspace:Raycast(unitRay.Origin, unitRay.Direction * 1500, params)
+    local targetPos = result and (result.Position + Vector3.new(0, 4, 0)) or (unitRay.Origin + unitRay.Direction * 200)
+
+    root.CFrame = CFrame.new(targetPos) * CFrame.Angles(0, root.CFrame.Rotation.Y, 0)
+end
+
+local function createTPButton()
+    if tpGui then tpGui:Destroy() end
+    tpGui = Instance.new("ScreenGui")
+    tpGui.Name = "AlpacaMobileTP"
+    tpGui.ResetOnSpawn = false
+    tpGui.Parent = game.CoreGui
+
+    local btn = Instance.new("TextButton")
+    btn.Name = "TPBtn"
+    btn.Size = UDim2.new(0, 70, 0, 70)
+    btn.Position = UDim2.new(1, -90, 1, -160)
+    btn.BackgroundColor3 = Color3.fromRGB(15,15,15)
+    btn.BackgroundTransparency = 0.3
+    btn.Text = "TP"
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 20
+    btn.BorderSizePixel = 0
+    btn.Parent = tpGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1,0)
+    corner.Parent = btn
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(0, 170, 255)
+    stroke.Thickness = 3
+    stroke.Parent = btn
+
+    btn.MouseButton1Click:Connect(performTeleport)
+end
+
+DevTab:CreateToggle({
+    Name = "Mobile Crosshair TP",
+    CurrentValue = true,
+    Flag = "MobileTPDev",
+    Callback = function(Value)
+        if Value then
+            createTPButton()
+        else
+            if tpGui then 
+                tpGui:Destroy() 
+                tpGui = nil 
+            end
+        end
+    end
+})
 local RankTab = Window:CreateTab("제작자 친구", 0)
 
 RankTab:CreateSection("제작자")
@@ -6195,14 +6266,6 @@ DevTab:CreateToggle({
                 end
             end)
         end
-    end
-})
-devTab:CreateToggle({
-    Name = "tp버튼 추가",
-    CurrentValue = false,
-    Flag = "TPToggle_Mobile",
-    Callback = function(Value)
-        toggleTPUI(Value)
     end
 })
 DevTab:CreateSection("Tweened Objects")
