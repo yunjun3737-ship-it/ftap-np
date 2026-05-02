@@ -6000,7 +6000,7 @@ GodTab:CreateToggle({
 
 
 GodTab:CreateToggle({
-    Name = "아무기느멊음",
+    Name = "아무기능 멊음",
     CurrentValue = false,
     Callback = function(v)
         FlingAuraT = v
@@ -6136,7 +6136,119 @@ GodTab:CreateToggle({
         end
     end
 })
+GodTab:CreateSection("New PvP Real Combat Features")
 
+-- 1. Auto Blobman Summon & Sit
+GodTab:CreateToggle({
+    Name = "블롭맨 오토 스폰 & 앉기",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            task.spawn(function()
+                while v do
+                    local inv = workspace:FindFirstChild(plr.Name.."SpawnedInToys")
+                    if not inv or not inv:FindFirstChild("CreatureBlobman") then
+                        rs.MenuToys.SpawnToyRemoteFunction:InvokeServer("CreatureBlobman", CFrame.new(0,9999,0), Vector3.new())
+                    end
+                    task.wait(3)
+                end
+            end)
+        end
+    end
+})
+
+-- 2. Auto Owner Kick (가까운 적 Owner Kick)
+GodTab:CreateToggle({
+    Name = "오토 오너킥 (근처플레이어)",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            task.spawn(function()
+                while v do
+                    for _, p in ipairs(Players:GetPlayers()) do
+                        if p \~= plr and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                            local dist = (p.Character.HumanoidRootPart.Position - (plr.Character and plr.Character.HumanoidRootPart.Position or Vector3.new())).Magnitude
+                            if dist < 40 then
+                                pcall(function()
+                                    rs.GrabEvents.SetNetworkOwner:FireServer(p.Character.HumanoidRootPart, p.Character.HumanoidRootPart.CFrame)
+                                    rs.GrabEvents.DestroyGrabLine:FireServer(p.Character.HumanoidRootPart)
+                                end)
+                            end
+                        end
+                    end
+                    task.wait(0.15)
+                end
+            end)
+        end
+    end
+})
+
+-- 3. Auto Bring (가까운 적 자동 끌어오기)
+GodTab:CreateToggle({
+    Name = "근처 사람 끌어오기",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            task.spawn(function()
+                while v do
+                    for _, p in ipairs(Players:GetPlayers()) do
+                        if p \~= plr and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                            local dist = (p.Character.HumanoidRootPart.Position - (plr.Character.HumanoidRootPart.Position)).Magnitude
+                            if dist < 50 then
+                                pcall(function()
+                                    rs.GrabEvents.SetNetworkOwner:FireServer(p.Character.HumanoidRootPart, p.Character.HumanoidRootPart.CFrame)
+                                end)
+                            end
+                        end
+                    end
+                    task.wait(0.2)
+                end
+            end)
+        end
+    end
+})
+
+-- 4. Massless Self (자신 무질량)
+GodTab:CreateToggle({
+    Name = "셀프 무질량",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            task.spawn(function()
+                while v do
+                    local char = plr.Character
+                    if char then
+                        for _, part in pairs(char:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Massless = true
+                            end
+                        end
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end
+})
+
+-- 5. Auto Heal (자동 회복)
+GodTab:CreateToggle({
+    Name = "자동 체력 회복",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            task.spawn(function()
+                while v do
+                    local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+                    if hum and hum.Health < 100 then
+                        hum.Health = 100
+                    end
+                    task.wait(0.5)
+                end
+            end)
+        end
+    end
+})
 print("GodMode - Extra Functions Added")
 RankTab:CreateSection("제작자")
 RankTab:CreateLabel("제작자 : baby_Alpaca | 알파카")
