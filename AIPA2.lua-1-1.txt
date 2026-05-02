@@ -21,7 +21,7 @@ local Window = Rayfield:CreateWindow({
         Note = "오너(알파카)에게서 키를 받을수있습니다.(800로벅).",
         FileName = "AIPA_Key", 
         SaveKey = true, -- 키 자동 저장
-        GrabKeyFromSite = false, 
+        GrabKeyFromSite = true, 
         Key = {"파카허브v30"} 
     }
 })
