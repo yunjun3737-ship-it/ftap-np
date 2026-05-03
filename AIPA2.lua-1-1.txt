@@ -8019,7 +8019,7 @@ local AntiGrabSticky = antiTab:CreateToggle({
 ]]--
 
 local AntiRelease = antiTab:CreateToggle({
-    Name = "안티 릴리즈",
+    Name = "안티 인풋(network owner)",
     CurrentValue = false,
     Flag = "AntiDeathToggleFlag",
     Callback = function(Value)
@@ -8029,7 +8029,7 @@ local AntiRelease = antiTab:CreateToggle({
         end
     end,
 })
---AntiRelease:Set(true)
+AntiRelease:Set(true)
 
 antiTab:CreateSection("Blob | Toggle")
 local AntiBlob = antiTab:CreateToggle({
