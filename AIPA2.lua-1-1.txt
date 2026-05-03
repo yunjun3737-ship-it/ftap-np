@@ -5904,8 +5904,8 @@ end
 
 -- 토글 (스크립트 로드 시 자동 ON)
 DevTab:CreateToggle({
-    Name = "Mobile Crosshair TP",
-    CurrentValue = true,     -- 자동 ON
+    Name = "모바일 tp",
+    CurrentValue = flase,     
     Flag = "MobileTP",
     Callback = function(Value)
         if Value then
@@ -6066,7 +6066,7 @@ end
 
 DevTab:CreateToggle({
     Name = "Mobile Crosshair TP (기본 ON)",
-    CurrentValue = true,   -- ← 스크립트 실행 시 자동 ON
+    CurrentValue = false,   
     Flag = "MobileTPDev",
     Callback = function(Value)
         tpEnabled = Value
@@ -7813,7 +7813,7 @@ local AntiGrabSticky = antiTab:CreateToggle({
 
 
 local AntiRelease = antiTab:CreateToggle({
-    Name = "안티 인풋(Network onwer",
+    Name = "안티 인풋(Network onwer)",
     CurrentValue = false,
     Flag = "AntiDeathToggleFlag",
     Callback = function(Value)
@@ -7949,7 +7949,7 @@ local AutoAttack  antiTab:CreateToggle({
         AutoAttackF()
     end
 })
-
+AutoAttack:Set(true)
 local AntiHoldPart = antiTab:CreateToggle({
     Name = "음식소환 막기",
     CurrentValue = false,
@@ -8005,7 +8005,7 @@ local AntiKick = antiTab:CreateToggle({
         task.spawn(AntiKickF)
     end
 })
---AntiKick:Set(true)
+AntiKick:Set(true)
 
 antiTab:CreateButton({
     Name = "안티킥 [ 집안 표창 소환 ]",
@@ -8257,14 +8257,14 @@ local Dropdown = antiTab:CreateDropdown({
 playerTab:CreateSection("Humanoid")
 playerTab:CreateToggle({
     Name = "이동 속도",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "28",
     Callback = function(Value)
         walkSpeedT = Value 
         updateWalkSpeedF()
     end
 })
-
+WalkSpeed:Set(true)
 local walkSpeedInput = playerTab:CreateInput({
     Name = "값",
     CurrentValue = 16,
@@ -8288,7 +8288,7 @@ playerTab:CreateToggle({
         updateJumpPowerF()
     end
 })
-
+JumpPower:Set(true)
 local jumpPowerInput = playerTab:CreateInput({
     Name = "값",
     CurrentValue = 24,
