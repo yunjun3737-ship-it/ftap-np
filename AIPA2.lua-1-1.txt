@@ -8043,11 +8043,6 @@ local AntiBlobUse = antiTab:CreateToggle({
         end
     end
 })
---
--- =================================================================
--- FTAP Anti-Fling & Velocity Control
--- =================================================================
-
 antiTab:CreateSection("물리 방어 설정")
 
 antiTab:CreateToggle({
@@ -8057,20 +8052,7 @@ antiTab:CreateToggle({
     Callback = function(Value)
         _G.AntiFlingEnabled = Value
         
-        if Value then
-            print("물리 방어 시스템이 활성화되었습니다.")
-            
-            task.spawn(function()
-                while _G.AntiFlingEnabled do
-                    task.wait(0.2)
-                    
-                    pcall(function()
-                        local lplr = game:GetService("Players").LocalPlayer
-                        if lplr then
-                            local character = lplr.Character
-                            if character then
-                                local hrp = character:FindFirstChild("HumanoidRootPart")
-                                if hrp then
+                                    -- 낙하 속도 및 충돌 가속도를 초기화하여 fling 튕김 방지
                                     hrp.Velocity = Vector3.new(0, 0, 0)
                                     hrp.RotVelocity = Vector3.new(0, 0, 0)
                                 end
@@ -8079,8 +8061,6 @@ antiTab:CreateToggle({
                     end)
                 end
             end)
-        else
-            print("물리 방어 시스템이 비활성화되었습니다.")
         end
     end
 })
