@@ -8123,6 +8123,53 @@ local AntiRelease = antiTab:CreateToggle({
     end,
 })
 
+-- ===== Anti Tab + Anti Release (clean) =====
+
+local AntiReleaseT = false
+local rs = game:GetService("ReplicatedStorage")
+local plr = game.Players.LocalPlayer
+
+-- create tab (window already exists)
+local antiTab = Window:CreateTab("Anti", 0)
+
+-- core function
+local function AntiReleaseF(state)
+    AntiReleaseT = state
+
+    local G = rs:WaitForChild("GrabEvents")
+
+    pcall(function()
+        if G:FindFirstChild("EndGrabEarly") then
+            G.EndGrabEarly:Destroy()
+        end
+    end)
+
+    Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
+
+    task.spawn(function()
+        while AntiReleaseT do
+            for _, target in pairs(game.Players:GetPlayers()) do
+                if target ~= plr and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                    local hrp = target.Character.HumanoidRootPart
+                    pcall(function()
+                        rs.GrabEvents.SetNetworkOwner:FireServer(hrp, hrp.CFrame)
+                    end)
+                end
+            end
+            task.wait(0.05)
+        end
+    end)
+end
+
+-- UI
+antiTab:CreateToggle({
+    Name = "Anti Release",
+    CurrentValue = false,
+    Callback = function(v)
+        AntiReleaseF(v)
+    end
+})
+
 
 antiTab:CreateSection("Grab | Toggle")
 local AntiGrab = antiTab:CreateToggle({
