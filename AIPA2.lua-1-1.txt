@@ -1748,6 +1748,52 @@ function loopPlayerBlobF4() -- 오너킥
         -- 정리 코드 ...
     end)
 end
+-- ================== 안티 인풋 (Anti-Input) 보호 기능 ==================
+local antiInputEnabled = false
+local antiInputLoop
+
+function ToggleAntiInput(state)
+    antiInputEnabled = state
+    
+    if antiInputLoop then
+        pcall(function() antiInputLoop:Disconnect() end)
+        antiInputLoop = nil
+    end
+    
+    if antiInputEnabled then
+        antiInputLoop = task.spawn(function()
+            while antiInputEnabled do
+                task.wait(0.4) 
+                
+                local char = game.Players.LocalPlayer.Character
+                local backpack = game.Players.LocalPlayer.Backpack
+                
+                if char then
+                
+                    local tool = char:FindFirstChildOfClass("Tool") or backpack:FindFirstChildOfClass("Tool")
+                    if not tool then
+                        
+                        local mayonnaises = game:GetService("ReplicatedStorage"):FindFirstChild("Tools") 
+                        
+                        if mayonnaises and mayonnaises:FindFirstChild("Mayonnaise") then
+                            local clonedTool = mayonnaises.Mayonnaise:Clone()
+                            clonedTool.Parent = game.Players.LocalPlayer.Backpack
+                            game.Players.LocalPlayer.Character:Humanoid:EquipTool(clonedTool)
+                        end
+                    else
+                        
+                        pcall(function()
+                            local handle = tool:FindFirstChild("Handle")
+                            if handle then
+                                game:GetService("ReplicatedStorage").GrabEvents.SetNetworkOwner:FireServer(handle, handle.CFrame)
+                            end
+                        end)
+                    end
+                end
+            end
+        end)
+    end
+end
 
     task.spawn(function()
         rs:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction"):InvokeServer(
@@ -7954,7 +8000,7 @@ local AntiGrabV1 = antiTab:CreateToggle({
 })
 
 local AntiGrabV1 = antiTab:CreateToggle({
-    Name = "루프 TP | 랜덤",
+    Name = "안티 루프킬,킥  | 랜덤",
     CurrentValue = false,
     Flag = "5",
     Callback = function(Value)
@@ -7991,6 +8037,14 @@ local AntiGrabV1 = antiTab:CreateToggle({
                 end
             end
         end)
+    end
+})
+antiTab:CreateToggle({
+    Name = "안티 인풋 (마요네즈 보호)",
+    CurrentValue = false,
+    Flag = "AntiInput_Toggle",
+    Callback = function(Value)
+        ToggleAntiInput(Value)
     end
 })
 
