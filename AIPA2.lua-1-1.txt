@@ -1413,20 +1413,20 @@ function OwnerLoopKickF()
         OwnerLoopKickConnections[target] = task.spawn(function()
             while OwnerLoopKickT do
                 local tChar = target.Character
-                if not tChar then 
+                if not tChar then
                     task.wait(0.5)
                     continue 
                 end
-
+                
                 local tHRP = tChar:FindFirstChild("HumanoidRootPart")
                 local tHum = tChar:FindFirstChildOfClass("Humanoid")
-
-                if not tHRP or not tHum then 
+                
+                if not tHRP or not tHum then
                     task.wait(0.5)
                     continue 
                 end
-
-                if tHum.Health <= 0 then 
+                
+                if tHum.Health <= 0 then
                     task.wait(1)
                     continue 
                 end
@@ -1434,23 +1434,20 @@ function OwnerLoopKickF()
                 pcall(function()
                     -- 1. Owner 잡기
                     rs.GrabEvents.SetNetworkOwner:FireServer(tHRP, tHRP.CFrame)
-                    
                     task.wait(0.03)
-
                     -- 2. 강제로 DestroyGrabLine (놓기)
                     rs.GrabEvents.DestroyGrabLine:FireServer(tHRP, tHRP.CFrame)
-
                     task.wait(0.05)
-
-                    -- 3. 다시 Owner 잡기 반복 (들었다 놨다)
+                    -- 3. 다시 Owner 잡기
                     rs.GrabEvents.SetNetworkOwner:FireServer(tHRP, tHRP.CFrame)
                 end)
-
-                task.wait(0.08)  -- 속도 조절 (너무 빠르면 서버에서 막힘)
+                
+                task.wait(0.08) 
             end
         end)
     end
 end
+
 
     for _, other in ipairs(game.Players:GetPlayers()) do
         if other ~= plr then
