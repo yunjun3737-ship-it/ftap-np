@@ -8043,6 +8043,46 @@ local AntiBlobUse = antiTab:CreateToggle({
         end
     end
 })
+-- =================================================================
+-- FTAP Anti-Fling & Velocity Control (antiTab에 추가할 내용)
+-- =================================================================
+
+antiTab:CreateSection("물리 방어 설정")
+
+antiTab:CreateToggle({
+    Name = "Fling 및 가속도 방어 활성화",
+    CurrentValue = false,
+    Flag = "AntiFlingToggle",
+    Callback = function(Value)
+        _G.AntiFlingEnabled = Value
+        
+        if Value then
+            print("물리 방어 시스템이 활성화되었습니다.")
+            
+            -- 방어 루프 실행
+            task.spawn(function()
+                while _G.AntiFlingEnabled do
+                    task.wait(0.2) -- 0.2초마다 실행
+                    
+                    pcall(function()
+                        local character = game:GetService("Players").LocalPlayer.Character
+                        if character then
+                            local hrp = character:FindFirstChild("HumanoidRootPart")
+                            if hrp then
+                                -- 낙하 속도 및 충돌 가속도를 0으로 초기화하여 Fling 튕김 방지
+                                hrp.Velocity = Vector3.new(0, 0, 0)
+                                hrp.RotVelocity = Vector3.new(0, 0, 0)
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            print("물리 방어 시스템이 비활성화되었습니다.")
+        end
+    end
+})
+
 antiTab:CreateSection("Kick | Toggle")
 local FlyingReset = antiTab:CreateToggle({
     Name = "킥방지 리셋",
@@ -9659,15 +9699,7 @@ local function setupPassiveAntiBlobman()
                         -- 캐릭터가 날아가거나 킬 판정을 받는 물리 상태 완화
                         local hrp = character:FindFirstChild("HumanoidRootPart")
                         if hrp then
-                            -- 낙하 속도 및 충돌 가속도를 초기화하여 fling 튕김 방지
-                            hrp.Velocity = Vector3.new(0, 0, 0)
-                            hrp.RotVelocity = Vector3.new(0, 0, 0)
-                        end
-                    end
-                end
-            end)
-        end
-    end)
+                            -
 
     -- 2. 블롭맨 엔티티의 충돌 판정 및 상호작용 상시 무력화
     task.spawn(function()
