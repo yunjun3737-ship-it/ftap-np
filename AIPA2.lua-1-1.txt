@@ -8090,6 +8090,38 @@ antiTab:CreateToggle({
         end
     end
 })
+local AntiDeathT = false
+
+local function AntiDeathF()
+    while AntiDeathT do
+        task.wait(0.02)
+        pcall(function()
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    if hum.Health ~= hum.MaxHealth then
+                        hum.Health = hum.MaxHealth
+                    end
+                    if hum.BreakJointsOnDeath ~= false then
+                        hum.BreakJointsOnDeath = false
+                    end
+                end
+            end
+        end)
+    end
+end
+local AntiRelease = antiTab:CreateToggle({
+    Name = "킬 방지",
+    CurrentValue = false,
+    Flag = "AntiDeathToggleFlag",
+    Callback = function(Value)
+        AntiDeathT = Value
+        if AntiDeathT then
+            task.spawn(AntiDeathF)
+        end
+    end,
+})
 
 
 antiTab:CreateSection("Grab | Toggle")
