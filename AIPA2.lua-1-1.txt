@@ -7987,18 +7987,6 @@ local GodModeToggle = antiTab:CreateToggle({
         GodModeT = Value
         if Value then
             GodModeF()
-            Rayfield:Notify({
-                Title = "🛡️ 갓모드 ON",
-                Content = "체력 무한 + 킬 방지 활성화",
-                Duration = 4
-            })
-        else
-            GodModeT = false
-            Rayfield:Notify({
-                Title = "🛡️ 갓모드 OFF",
-                Content = "갓모드가 해제되었습니다.",
-                Duration = 3
-            })
         end
     end
 })ntiTab:CreateSection("Grab | Toggle")
