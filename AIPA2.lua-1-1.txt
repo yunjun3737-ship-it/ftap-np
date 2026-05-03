@@ -7976,8 +7976,8 @@ local AntiGrabV1 = antiTab:CreateToggle({
         end)
     end
 })
-
-aantiTab:CreateSection("God Mode")
+-- ================== God Mode ==================
+antiTab:CreateSection("God Mode")
 
 local GodModeToggle = antiTab:CreateToggle({
     Name = "갓모드 (God Mode)",
@@ -7987,8 +7987,13 @@ local GodModeToggle = antiTab:CreateToggle({
         GodModeT = Value
         if Value then
             GodModeF()
+            Rayfield:Notify({Title = "🛡️ 갓모드 ON", Content = "체력 무한 + 킬 방지", Duration = 4})
+        else
+            GodModeT = false
+            Rayfield:Notify({Title = "🛡️ 갓모드 OFF", Content = "갓모드 해제", Duration = 3})
         end
     end
+})
 })ntiTab:CreateSection("Grab | Toggle")
 local AntiGrab = antiTab:CreateToggle({
     Name = "안티 그랩",
