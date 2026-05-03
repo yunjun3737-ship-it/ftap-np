@@ -7942,7 +7942,7 @@ AntiLag:Set(true)
 
 local AutoAttack  antiTab:CreateToggle({
     Name = "오토어택 | 잡으면 뒤짐",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "AutoAttack",
     Callback = function(Value)
         AutoAttackT = Value
