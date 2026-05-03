@@ -8044,6 +8044,36 @@ local AntiBlobUse = antiTab:CreateToggle({
     end
 })
 
+antiTab:CreateSection("블롭맨 방어 설정")
+
+local blobPassiveToggle = antiTab:CreateToggle({
+    Name = "블롭맨 패시브 무력화 (상시)",
+    CurrentValue = true, -- 기본 활성화
+    Flag = "BlobPassiveToggle",
+    Callback = function(Value)
+        if Value then
+            print("블롭맨 상시 무력화가 활성화되었습니다.")
+        else
+            print("블롭맨 상시 무력화가 비활성화되었습니다.")
+        end
+    end
+})
+
+antiTab:CreateSection("블롭맨 방어 설정")
+
+local blobPassiveToggle = antiTab:CreateToggle({
+    Name = "블롭맨 패시브 무력화 (상시)",
+    CurrentValue = true, -- 기본 활성화
+    Flag = "BlobPassiveToggle",
+    Callback = function(Value)
+        if Value then
+            print("블롭맨 상시 무력화가 활성화되었습니다.")
+        else
+            print("블롭맨 상시 무력화가 비활성화되었습니다.")
+        end
+    end
+})
+
 antiTab:CreateSection("Kick | Toggle")
 local FlyingReset = antiTab:CreateToggle({
     Name = "킥방지 리셋",
