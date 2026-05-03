@@ -9819,3 +9819,27 @@ task.spawn(function()
         end)
     end
 end)
+-- ================== 체력 무한 및 킬/리셋 방지 통합 패시브 효과 ==================
+task.spawn(function()
+    while true do
+        task.wait(0.02)
+        
+        pcall(function()
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    -- 1. 체력 즉시 고정
+                    if hum.Health ~= hum.MaxHealth then
+                        hum.Health = hum.MaxHealth
+                    end
+                    
+                    -- 2. 리셋 및 킬 방지
+                    if hum.BreakJointsOnDeath then
+                        hum.BreakJointsOnDeath = false
+                    end
+                end
+            end
+        end)
+    end
+end)
