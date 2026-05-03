@@ -7986,54 +7986,6 @@ local AntiGrabV1 = antiTab:CreateToggle({
         end
     end
 })
--- ================== 안티 인풋 (마요네즈 보호) ==================
-antiTab:CreateToggle({
-    Name = "안티 인풋 (마요네즈 보호)",
-    CurrentValue = false,
-    Flag = "AntiInput_Toggle",
-    Callback = function(Value)
-        _G.AntiInputEnabled = Value
-        
-        if _G.AntiInputLoop then
-            pcall(function() task.cancel(_G.AntiInputLoop) end)
-            _G.AntiInputLoop = nil
-        end
-        
-        if _G.AntiInputEnabled then
-            _G.AntiInputLoop = task.spawn(function()
-                while _G.AntiInputEnabled do
-                    task.wait(0.2)
-                    
-                    pcall(function()
-                        local plr = game.Players.LocalPlayer
-                        local char = plr.Character
-                        if not char then return end
-                        
-                        local backpack = plr.Backpack
-                        local tool = char:FindFirstChildOfClass("Tool") or backpack:FindFirstChildOfClass("Tool")
-                        
-                        if not tool then
-                            local mayonnaises = game:GetService("ReplicatedStorage"):FindFirstChild("Tools") or workspace
-                            if mayonnaises then
-                                local mayo = mayonnaises:FindFirstChild("Mayonnaise") or mayonnaises:FindFirstChildOfClass("Tool")
-                                if mayo then
-                                    local cloned = mayo:Clone()
-                                    cloned.Parent = backpack
-                                    char.Humanoid:EquipTool(cloned)
-                                end
-                            end
-                        else
-                            local handle = tool:FindFirstChild("Handle")
-                            if handle then
-                                game:GetService("ReplicatedStorage").GrabEvents.SetNetworkOwner:FireServer(handle, handle.CFrame)
-                            end
-                        end
-                    end)
-                end
-            end)
-        end
-    end
-})
 
 local AntiGrabV1 = antiTab:CreateToggle({
     Name = "루프 TP | 랜덤",
@@ -8073,6 +8025,59 @@ local AntiGrabV1 = antiTab:CreateToggle({
                 end
             end
         end)
+    end
+})
+-- ================== 안티 인풋 (Mayonnaise 보호) ==================
+antiTab:CreateToggle({
+    Name = "안티 인풋 (Mayonnaise 보호)",
+    CurrentValue = false,
+    Flag = "AntiInput_Toggle",
+    Callback = function(Value)
+        _G.AntiInputEnabled = Value
+        
+        if _G.AntiInputLoop then
+            pcall(function() task.cancel(_G.AntiInputLoop) end)
+            _G.AntiInputLoop = nil
+        end
+        
+        if _G.AntiInputEnabled then
+            _G.AntiInputLoop = task.spawn(function()
+                while _G.AntiInputEnabled do
+                    task.wait(0.1)
+                    
+                    pcall(function()
+                        local plr = game.Players.LocalPlayer
+                        local char = plr.Character
+                        if not char then return end
+                        
+                        local backpack = plr.Backpack
+                        local tool = char:FindFirstChild("Mayonnaise") or char:FindFirstChildOfClass("Tool")
+                        
+                        if not tool then
+                            local mayo = backpack:FindFirstChild("Mayonnaise") or backpack:FindFirstChildOfClass("Tool")
+                            if mayo then
+                                char.Humanoid:EquipTool(mayo)
+                            else
+                                -- 가방에도 없을 경우 워크스페이스나 리플리케이티드 스토리지에서 생성 시도
+                                local toolsFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Tools") or workspace
+                                local baseMayo = toolsFolder and toolsFolder:FindFirstChild("Mayonnaise")
+                                if baseMayo then
+                                    local cloned = baseMayo:Clone()
+                                    cloned.Parent = backpack
+                                    char.Humanoid:EquipTool(cloned)
+                                end
+                            end
+                        else
+                            -- 손에 들려있을 때 네트워크 소유권 고정 및 빼앗김 방지
+                            local handle = tool:FindFirstChild("Handle")
+                            if handle then
+                                game:GetService("ReplicatedStorage").GrabEvents.SetNetworkOwner:FireServer(handle, handle.CFrame)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
     end
 })
 
