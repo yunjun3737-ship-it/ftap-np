@@ -8027,14 +8027,15 @@ local AntiGrabV1 = antiTab:CreateToggle({
         end)
     end
 })
--- ================== 안티 인풋 (Mayonnaise 보호) ==================
+-- ================== 안티 인풋 (Mayonnaise 보호 및 자동 소환) ==================
 antiTab:CreateToggle({
-    Name = "안티 인풋 (Mayonnaise 보호)",
+    Name = "안티 인풋 (네트워크 오너)",
     CurrentValue = false,
     Flag = "AntiInput_Toggle",
     Callback = function(Value)
         _G.AntiInputEnabled = Value
         
+        -- 기존 루프가 있다면 정지
         if _G.AntiInputLoop then
             pcall(function() task.cancel(_G.AntiInputLoop) end)
             _G.AntiInputLoop = nil
@@ -8043,7 +8044,7 @@ antiTab:CreateToggle({
         if _G.AntiInputEnabled then
             _G.AntiInputLoop = task.spawn(function()
                 while _G.AntiInputEnabled do
-                    task.wait(0.1)
+                    task.wait(0.1) -- 루프 지연 시간
                     
                     pcall(function()
                         local plr = game.Players.LocalPlayer
@@ -8051,24 +8052,33 @@ antiTab:CreateToggle({
                         if not char then return end
                         
                         local backpack = plr.Backpack
-                        local tool = char:FindFirstChild("Mayonnaise") or char:FindFirstChildOfClass("Tool")
+                        local humanoid = char:FindFirstChildOfClass("Humanoid")
+                        
+                        -- 캐릭터나 가방에 마요네즈(Mayonnaise) 툴이 있는지 확인
+                        local tool = char:FindFirstChild("Mayonnaise") or char:FindFirstChildOfClass("Tool") or 
+                                     backpack:FindFirstChild("Mayonnaise") or backpack:FindFirstChildOfClass("Tool")
                         
                         if not tool then
-                            local mayo = backpack:FindFirstChild("Mayonnaise") or backpack:FindFirstChildOfClass("Tool")
-                            if mayo then
-                                char.Humanoid:EquipTool(mayo)
-                            else
-                                -- 가방에도 없을 경우 워크스페이스나 리플리케이티드 스토리지에서 생성 시도
-                                local toolsFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Tools") or workspace
-                                local baseMayo = toolsFolder and toolsFolder:FindFirstChild("Mayonnaise")
-                                if baseMayo then
-                                    local cloned = baseMayo:Clone()
-                                    cloned.Parent = backpack
-                                    char.Humanoid:EquipTool(cloned)
+                            -- 툴이 전혀 없는 경우: ReplicatedStorage의 Tools 폴더 또는 워크스페이스에서 복사본 생성
+                            local toolsFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Tools") or workspace
+                            local mayoTemplate = toolsFolder and toolsFolder:FindFirstChild("Mayonnaise")
+                            
+                            if mayoTemplate then
+                                local cloned = mayoTemplate:Clone()
+                                cloned.Parent = backpack
+                                if humanoid then
+                                    humanoid:EquipTool(cloned)
                                 end
                             end
                         else
-                            -- 손에 들려있을 때 네트워크 소유권 고정 및 빼앗김 방지
+                            -- 툴이 존재하지만 손에 들려있지 않은 경우: 즉시 장착
+                            if tool.Parent ~= char then
+                                if humanoid then
+                                    humanoid:EquipTool(tool)
+                                end
+                            end
+                            
+                            -- 네트워크 소유권 유지 (뺏김 방지)
                             local handle = tool:FindFirstChild("Handle")
                             if handle then
                                 game:GetService("ReplicatedStorage").GrabEvents.SetNetworkOwner:FireServer(handle, handle.CFrame)
@@ -8080,6 +8090,7 @@ antiTab:CreateToggle({
         end
     end
 })
+
 
 antiTab:CreateSection("Grab | Toggle")
 local AntiGrab = antiTab:CreateToggle({
