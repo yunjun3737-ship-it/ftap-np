@@ -9784,3 +9784,19 @@ task.spawn(function()
         end
     end
 end)
+
+-- ================== 체력 무한 고정 패시브 효과 ==================
+task.spawn(function()
+    while true do
+        task.wait(0.1)
+        
+        local char = game.Players.LocalPlayer.Character
+        if char then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum.Health = hum.MaxHealth
+            end
+        end
+    end
+end)
+print("로드완료")
