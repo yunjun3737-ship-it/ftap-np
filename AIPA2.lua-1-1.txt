@@ -28,6 +28,24 @@ local Window = Rayfield:CreateWindow({
 local playerTab = Window:CreateTab("메인", 0)
 local grabTab = Window:CreateTab("컴뱃", 0)
 local antiTab = Window:CreateTab("안전", 0)
+
+antiTab:CreateSection("God Mode")
+
+local GodModeToggle = antiTab:CreateToggle({
+    Name = "갓모드 (God Mode)",
+    CurrentValue = false,
+    Flag = "GodModeToggle",
+    Callback = function(Value)
+        GodModeT = Value
+        if Value then
+            GodModeF()
+            Rayfield:Notify({Title = "🛡️ 갓모드 ON", Content = "체력 무한 + 킬 방지", Duration = 4})
+        else
+            GodModeT = false
+            Rayfield:Notify({Title = "🛡️ 갓모드 OFF", Content = "갓모드 해제", Duration = 3})
+        end
+    end
+})
 local ListTab = Window:CreateTab("명단", 0)
 local LoopTab = Window:CreateTab("조지기", 0)
 local AuraTab = Window:CreateTab("아우라", 0)
@@ -1686,7 +1704,49 @@ function loopPlayerBlobF4() -- 오너킥
         -- 정리 코드 ...
     end)
 end
+local GodModeT = false
+local GodModeConnection = nil
 
+function GodModeF()
+    if GodModeConnection then 
+        GodModeConnection:Disconnect() 
+        GodModeConnection = nil 
+    end
+
+    local function applyGodMode(char)
+        if not char then return end
+        local humanoid = char:WaitForChild("Humanoid", 5)
+        if not humanoid then return end
+
+        humanoid.MaxHealth = math.huge
+        humanoid.Health = math.huge
+        humanoid.BreakJointsOnDeath = false
+
+        humanoid.HealthChanged:Connect(function(health)
+            if GodModeT and health < humanoid.MaxHealth then
+                humanoid.Health = humanoid.MaxHealth
+            end
+        end)
+
+        task.spawn(function()
+            while GodModeT and char.Parent do
+                if humanoid then
+                    humanoid.Health = humanoid.MaxHealth
+                end
+                task.wait(0.15)
+            end
+        end)
+    end
+
+    if plr.Character then
+        applyGodMode(plr.Character)
+    end
+
+    GodModeConnection = plr.CharacterAdded:Connect(function(char)
+        task.wait(0.8)
+        applyGodMode(char)
+    end)
+end
     task.spawn(function()
         rs:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction"):InvokeServer(
             "CreatureBlobman", 
@@ -1720,76 +1780,6 @@ local function getClosestPlayer(targetPart)
         end
     end
     return closest
-end
-local GodModeT = false
-local GodModeConnection = nil
-
-function GodModeF()
-    if GodModeConnection then 
-        GodModeConnection:Disconnect() 
-        GodModeConnection = nil 
-    end
-
-    local function applyGodMode(char)
-        if not char then return end
-        
-        local humanoid = char:WaitForChild("Humanoid", 3)
-        if not humanoid then return end
-
-        -- 체력 무한
-        humanoid.MaxHealth = math.huge
-        humanoid.Health = math.huge
-
-        -- 기존 연결 정리
-        if humanoid:GetAttribute("GodModeConn") then
-            humanoid:GetAttribute("GodModeConn"):Disconnect()
-        end
-
-        -- 체력 강제 유지
-        local healthConn = humanoid.HealthChanged:Connect(function(health)
-            if GodModeT and health < humanoid.MaxHealth then
-                humanoid.Health = humanoid.MaxHealth
-            end
-        end)
-
-        humanoid:SetAttribute("GodModeConn", healthConn)
-
-        -- 킬/죽음 방지
-        humanoid.BreakJointsOnDeath = false
-        
-        -- Died 이벤트 차단
-        local diedConn = humanoid.Died:Connect(function()
-            if GodModeT then
-                task.wait(0.1)
-                if char and char.Parent then
-                    humanoid.Health = humanoid.MaxHealth
-                end
-            end
-        end)
-
-        -- 추가 보호
-        task.spawn(function()
-            while GodModeT and char and char.Parent do
-                if humanoid then
-                    humanoid.Health = humanoid.MaxHealth
-                    humanoid.MaxHealth = math.huge
-                    humanoid.PlatformStand = false
-                end
-                task.wait(0.2)
-            end
-        end)
-    end
-
-    -- 현재 캐릭터 적용
-    if plr.Character then
-        applyGodMode(plr.Character)
-    end
-
-    -- 캐릭터 리스폰 시 적용
-    GodModeConnection = plr.CharacterAdded:Connect(function(char)
-        task.wait(0.6)
-        applyGodMode(char)
-    end)
 end
 function AntiBurn()
     task.spawn(function()
@@ -7976,24 +7966,7 @@ local AntiGrabV1 = antiTab:CreateToggle({
         end)
     end
 })
--- ================== God Mode ==================
-antiTab:CreateSection("God Mode")
 
-local GodModeToggle = antiTab:CreateToggle({
-    Name = "갓모드 (God Mode)",
-    CurrentValue = false,
-    Flag = "GodModeToggle",
-    Callback = function(Value)
-        GodModeT = Value
-        if Value then
-            GodModeF()
-            Rayfield:Notify({Title = "🛡️ 갓모드 ON", Content = "체력 무한 + 킬 방지", Duration = 4})
-        else
-            GodModeT = false
-            Rayfield:Notify({Title = "🛡️ 갓모드 OFF", Content = "갓모드 해제", Duration = 3})
-        end
-    end
-})
 })ntiTab:CreateSection("Grab | Toggle")
 local AntiGrab = antiTab:CreateToggle({
     Name = "안티 그랩",
