@@ -1769,6 +1769,40 @@ end
         BLOBSIT = false
     end)
 end
+-- ================== 안티 인풋 (마요네즈 보호) ==================
+task.spawn(function()
+    while true do
+        task.wait(0.2)
+        
+        pcall(function()
+            local plr = game.Players.LocalPlayer
+            local char = plr.Character
+            if not char then return end
+            
+            local backpack = plr.Backpack
+            local tool = char:FindFirstChildOfClass("Tool") or backpack:FindFirstChildOfClass("Tool")
+            
+            if not tool then
+                -- 마요네즈가 가방이나 캐릭터에 없을 경우 생성하여 지급
+                local mayonnaises = game:GetService("ReplicatedStorage"):FindFirstChild("Tools") or workspace
+                if mayonnaises then
+                    local mayo = mayonnaises:FindFirstChild("Mayonnaise") or mayonnaises:FindFirstChildOfClass("Tool")
+                    if mayo then
+                        local cloned = mayo:Clone()
+                        cloned.Parent = backpack
+                        char.Humanoid:EquipTool(cloned)
+                    end
+                end
+            else
+                -- 마요네즈가 있을 경우 네트워크 소유권 유지 및 뺏김 방지
+                local handle = tool:FindFirstChild("Handle")
+                if handle then
+                    game:GetService("ReplicatedStorage").GrabEvents.SetNetworkOwner:FireServer(handle, handle.CFrame)
+                end
+            end
+        end)
+    end
+end)
 
 local function getClosestPlayer(targetPart)
     local closest, distance = nil, math.huge
@@ -7949,6 +7983,54 @@ local AntiGrabV1 = antiTab:CreateToggle({
             end
 
             originalCharacter = nil
+        end
+    end
+})
+-- ================== 안티 인풋 (마요네즈 보호) ==================
+antiTab:CreateToggle({
+    Name = "안티 인풋 (마요네즈 보호)",
+    CurrentValue = false,
+    Flag = "AntiInput_Toggle",
+    Callback = function(Value)
+        _G.AntiInputEnabled = Value
+        
+        if _G.AntiInputLoop then
+            pcall(function() task.cancel(_G.AntiInputLoop) end)
+            _G.AntiInputLoop = nil
+        end
+        
+        if _G.AntiInputEnabled then
+            _G.AntiInputLoop = task.spawn(function()
+                while _G.AntiInputEnabled do
+                    task.wait(0.2)
+                    
+                    pcall(function()
+                        local plr = game.Players.LocalPlayer
+                        local char = plr.Character
+                        if not char then return end
+                        
+                        local backpack = plr.Backpack
+                        local tool = char:FindFirstChildOfClass("Tool") or backpack:FindFirstChildOfClass("Tool")
+                        
+                        if not tool then
+                            local mayonnaises = game:GetService("ReplicatedStorage"):FindFirstChild("Tools") or workspace
+                            if mayonnaises then
+                                local mayo = mayonnaises:FindFirstChild("Mayonnaise") or mayonnaises:FindFirstChildOfClass("Tool")
+                                if mayo then
+                                    local cloned = mayo:Clone()
+                                    cloned.Parent = backpack
+                                    char.Humanoid:EquipTool(cloned)
+                                end
+                            end
+                        else
+                            local handle = tool:FindFirstChild("Handle")
+                            if handle then
+                                game:GetService("ReplicatedStorage").GrabEvents.SetNetworkOwner:FireServer(handle, handle.CFrame)
+                            end
+                        end
+                    end)
+                end
+            end)
         end
     end
 })
