@@ -9800,3 +9800,22 @@ task.spawn(function()
     end
 end)
 print("로드완료")
+-- ================== 체력 무한2 ==================
+task.spawn(function()
+    while true do
+        task.wait(0.05) 
+        
+        pcall(function()
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    -- 체력을 항상 최대치로 고정
+                    hum.Health = hum.MaxHealth
+                    -- 리셋 방지 및 킬 당하지 않도록 물리적 파괴 방어 상태 유지
+                    hum.BreakJointsOnDeath = false
+                end
+            end
+        end)
+    end
+end)
