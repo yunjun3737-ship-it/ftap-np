@@ -7799,7 +7799,7 @@ local AntiGrab = antiTab:CreateToggle({
 })
 AntiGrab:Set(true)
 
---[[
+
 local AntiGrabSticky = antiTab:CreateToggle({
     Name = "안티그랩 |  StickyPart",
     CurrentValue = false,
@@ -7810,10 +7810,10 @@ local AntiGrabSticky = antiTab:CreateToggle({
         end
     end
 })
-]]--
+
 
 local AntiRelease = antiTab:CreateToggle({
-    Name = "안티 릴리즈",
+    Name = "안티 인풋(Network onwer",
     CurrentValue = false,
     Flag = "AntiDeathToggleFlag",
     Callback = function(Value)
@@ -7823,7 +7823,7 @@ local AntiRelease = antiTab:CreateToggle({
         end
     end,
 })
---AntiRelease:Set(true)
+AntiRelease:Set(true)
 
 antiTab:CreateSection("Blob | Toggle")
 local AntiBlob = antiTab:CreateToggle({
@@ -7951,7 +7951,7 @@ local AutoAttack  antiTab:CreateToggle({
 })
 
 local AntiHoldPart = antiTab:CreateToggle({
-    Name = "홀드파트 금지",
+    Name = "음식소환 막기",
     CurrentValue = false,
     Callback = function(Value)
         AntiBananaT = Value
@@ -7961,7 +7961,7 @@ local AntiHoldPart = antiTab:CreateToggle({
 --AntiHoldPart:Set(true)
 
 local AntiBlobUse = antiTab:CreateToggle({
-    Name = "장난감 토클 제한",
+    Name = "블롭맨 사용 막기",
     CurrentValue = false,
     Callback = function(Value)
         AntiBlobUseT = Value
