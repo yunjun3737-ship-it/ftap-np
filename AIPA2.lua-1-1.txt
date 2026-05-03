@@ -7290,7 +7290,7 @@ local OwnerLoopKickToggle = LoopTab:CreateToggle({
     OLTPInput:Set("0,30,0")
     
     local blobLoop4Toggle = LoopTab:CreateToggle({
-        Name = "루프 오너킥 [ 블롭맨없음 ]",
+        Name = "스팸킥v25 [ 블롭맨없음 ]",
         CurrentValue = false,
         Flag = "21",
         Callback = function(Value)
@@ -7312,7 +7312,7 @@ local OwnerLoopKickToggle = LoopTab:CreateToggle({
     local function loopPlayerBlobF4()
         task.spawn(function()
             while blobLoopT4 do
-                task.wait(0.001)
+                task.wait(0.0001)
                 for _, name in ipairs(playersInLoop2V) do
                     local foundPlr = Players:FindFirstChild(name)
                     if foundPlr and foundPlr.Character then
@@ -7336,11 +7336,11 @@ local OwnerLoopKickToggle = LoopTab:CreateToggle({
             local character = player.Character
             while blobLoopT4 and (not character or not character:FindFirstChild("Humanoid")) do
                 if not player.Parent then return end
-                task.wait(0.000000005)
+                task.wait(0.00000000005)
                 character = player.Character
             end
             local charHUM = character and character:FindFirstChild("Humanoid")
-            if not charHUM then task.wait(0.0000000005) continue end
+            if not charHUM then task.wait(0.000000000005) continue end
             task.wait()
         end
     end
@@ -7363,7 +7363,7 @@ local OLTPInput = LoopTab:CreateInput({
 OLTPInput:Set("0,20,0")
 
 local blobLoop4Toggle = LoopTab:CreateToggle({
-    Name = "루프 오너킥 [ 오토아님 ]",
+    Name = "루프 스팸킥 [ 블롭맨 ]",
     CurrentValue = false,
     Flag = "21",
     Callback = function(Value)
