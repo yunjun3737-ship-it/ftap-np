@@ -7950,6 +7950,7 @@ local AutoAttack  antiTab:CreateToggle({
     end
 })
 AutoAttack:Set(true)
+
 local AntiHoldPart = antiTab:CreateToggle({
     Name = "음식소환 막기",
     CurrentValue = false,
