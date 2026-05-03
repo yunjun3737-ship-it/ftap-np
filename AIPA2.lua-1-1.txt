@@ -1608,7 +1608,7 @@ OwnerKickMODED = false
 SitMODED = false
 OnlyOwner = false
 SkipOL = false
-OLTPValue = Vector3.new(0, 20, 0)
+OLTPValue = Vector3.new(0, 30, 0)
 
 function loopPlayerBlobF4() -- 오너킥
     UpdateCurrentBlobman()
@@ -1652,7 +1652,7 @@ function loopPlayerBlobF4() -- 오너킥
             local character = player.Character
             while blobLoopT4 and (not character or not character:FindFirstChild("Humanoid")) do
                 if not player.Parent then return end
-                task.wait(0.0005)
+                task.wait(0.05)
                 character = player.Character
             end
 
@@ -7362,7 +7362,7 @@ LoopTab:CreateSection("블롭 없는오너킥")
 
 local OLTPInput = LoopTab:CreateInput({
     Name = "X Y Z",
-    CurrentValue = "0,20,0",
+    CurrentValue = "0,30,0",
     PlaceholderText = "",
     RemoveTextAfterFocusLost = false,
     Flag = "",
@@ -7373,7 +7373,7 @@ local OLTPInput = LoopTab:CreateInput({
         end
     end
 })
-OLTPInput:Set("0,35,0")
+OLTPInput:Set("0,30,0")
 
 local blobLoop4Toggle = LoopTab:CreateToggle({
     Name = "루프 오너킥 [ 블롭맨 없음 ]",
