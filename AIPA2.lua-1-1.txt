@@ -8005,7 +8005,7 @@ local AntiKick = antiTab:CreateToggle({
         task.spawn(AntiKickF)
     end
 })
-AntiKick:Set(true)
+--AntiKick:Set(true)
 
 antiTab:CreateButton({
     Name = "안티킥 [ 집안 표창 소환 ]",
@@ -8257,7 +8257,7 @@ local Dropdown = antiTab:CreateDropdown({
 playerTab:CreateSection("Humanoid")
 playerTab:CreateToggle({
     Name = "이동 속도",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "28",
     Callback = function(Value)
         walkSpeedT = Value 
