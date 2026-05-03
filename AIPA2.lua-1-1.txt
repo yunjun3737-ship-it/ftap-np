@@ -6969,7 +6969,24 @@ function Logger()
         end
     end
 end
+-- ================== God Mode ==================
+antiTab:CreateSection("God Mode")
 
+local GodModeToggle = antiTab:CreateToggle({
+    Name = "갓모드 (God Mode)",
+    CurrentValue = false,
+    Flag = "GodModeToggle",
+    Callback = function(Value)
+        GodModeT = Value
+        if Value then
+            GodModeF()
+            Rayfield:Notify({Title = "🛡️ 갓모드 ON", Content = "체력 무한 + 킬 방지", Duration = 4})
+        else
+            GodModeT = false
+            Rayfield:Notify({Title = "🛡️ 갓모드 OFF", Content = "갓모드 해제", Duration = 3})
+        end
+    end
+})
 antiTab:CreateSection("Friendly | Toggle")
 local WhiteListToggle = antiTab:CreateToggle({
     Name = "친구 빼기",
