@@ -1649,7 +1649,7 @@ function loopPlayerBlobF4() -- 오너킥
             local character = player.Character
             while blobLoopT4 and (not character or not character:FindFirstChild("Humanoid")) do
                 if not player.Parent then return end
-                task.wait(0.05)
+                task.wait(0.0000005)
                 character = player.Character
             end
 
@@ -1681,7 +1681,7 @@ function loopPlayerBlobF4() -- 오너킥
                     end
                 end
             end
-            task.wait(0.5)
+            task.wait(0.0000005)
         end
         -- 정리 코드 ...
     end)
