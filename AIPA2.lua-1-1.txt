@@ -1602,7 +1602,7 @@ end
 local RunService = game:GetService("RunService")
 local destroyCount = 0
 OwnerKickMODED = false
-SitMODED = false
+SitMODED = true
 OnlyOwner = false
 SkipOL = false
 OLTPValue = Vector3.new(0, 30, 0)
@@ -1649,7 +1649,7 @@ function loopPlayerBlobF4() -- 오너킥
             local character = player.Character
             while blobLoopT4 and (not character or not character:FindFirstChild("Humanoid")) do
                 if not player.Parent then return end
-                task.wait(0.0000005)
+                task.wait(0.00000000005)
                 character = player.Character
             end
 
