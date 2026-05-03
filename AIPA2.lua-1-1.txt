@@ -7813,7 +7813,7 @@ local AntiGrabSticky = antiTab:CreateToggle({
 
 
 local AntiRelease = antiTab:CreateToggle({
-    Name = "안티 인풋(Network onwer",
+    Name = "안티 인풋(Network onwer)",
     CurrentValue = false,
     Flag = "AntiDeathToggleFlag",
     Callback = function(Value)
@@ -7880,7 +7880,7 @@ AntiInPlots:Set(true)
 
 antiTab:CreateSection("Game | Toggle")
 local AntiVoid = antiTab:CreateToggle({
-    Name = "무효 금지",
+    Name = "안티 보이드",
     CurrentValue = false,
     Callback = function(Value)
         if Value then
@@ -8005,7 +8005,7 @@ local AntiKick = antiTab:CreateToggle({
         task.spawn(AntiKickF)
     end
 })
---AntiKick:Set(true)
+AntiKick:Set(true)
 
 antiTab:CreateButton({
     Name = "안티킥 [ 집안 표창 소환 ]",
