@@ -36,6 +36,7 @@ local keybindTab = Window:CreateTab("설정", 0)
 --local CreditsTab = Window:CreateTab("나머지", 0)
 local DevTab = Window:CreateTab("잡기능", 0)
 local RankTab = Window:CreateTab("제작자 친구", 0)
+local GodTab = Window:CreateTab("강화된 기능", 0)
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
 cam = workspace.CurrentCamera
@@ -5901,7 +5902,227 @@ local function createTPButton()
 
     btn.MouseButton1Click:Connect(performTeleport)
 end
+GodTab:CreateSection("Anti Features")
 
+
+local antiInputConn = nil
+GodTab:CreateToggle({
+    Name = "안티 인풋 (오토)",
+    CurrentValue = true,
+    Callback = function(v)
+        if v then
+            antiInputConn = game:GetService("RunService").Heartbeat:Connect(function()
+                for _, ham in ipairs(workspace:GetDescendants()) do
+                    if ham.Name == "Hamburger" then
+                        local part = ham:FindFirstChildWhichIsA("BasePart")
+                        if part then
+                            pcall(function()
+                                rs.GrabEvents.SetNetworkOwner:FireServer(part, part.CFrame)
+                                rs.GrabEvents.DestroyGrabLine:FireServer(part, part.CFrame)
+                            end)
+                        end
+                    end
+                end
+            end)
+        else
+            if antiInputConn then antiInputConn:Disconnect() end
+        end
+    end
+})
+
+GodTab:CreateSection("Utility")
+
+-- 노클립
+GodTab:CreateToggle({
+    Name = "영구 노클립",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            game:GetService("RunService").Stepped:Connect(function()
+                local char = plr.Character
+                if char then
+                    for _, part in pairs(char:GetChildren()) do
+                        if part:IsA("BasePart") then part.CanCollide = false end
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- 무적
+GodTab:CreateToggle({
+    Name = "무적 (Health Lock)",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            task.spawn(function()
+                while v do
+                    local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+                    if hum then hum.Health = 100 end
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end
+})
+
+GodTab:CreateSection("Troll / Combat")
+
+-- Kill Aura
+GodTab:CreateToggle({
+    Name = "킬 아우라",
+    CurrentValue = false,
+    Callback = function(v)
+        KillAuraT = v
+        KillAuraF()
+    end
+})
+
+-- Fling Aura
+GodTab:CreateToggle({
+    Name = "플링 아우라",
+    CurrentValue = false,
+    Callback = function(v)
+        FlingAuraT = v
+        FlingAuraF()
+    end
+})
+
+GodTab:CreateSection("TP & Movement")
+
+GodTab:CreateButton({
+    Name = "랜덤 TP",
+    Callback = function()
+        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = CFrame.new(math.random(-500,500), 50, math.random(-500,500))
+        end
+    end
+})
+
+-- Mobile TP (Crosshair)
+local tpGui = nil
+GodTab:CreateToggle({
+    Name = "모바일tp (강화)",
+    CurrentValue = true,
+    Callback = function(v)
+        if v then
+            
+            if tpGui then tpGui:Destroy() end
+            tpGui = Instance.new("ScreenGui")
+            tpGui.Parent = game.CoreGui
+            local btn = Instance.new("TextButton", tpGui)
+            btn.Size = UDim2.new(0,70,0,70)
+            btn.Position = UDim2.new(1,-90,1,-160)
+            btn.BackgroundColor3 = Color3.fromRGB(20,20,20)
+            btn.Text = "TP"
+            btn.TextColor3 = Color3.new(1,1,1)
+            btn.MouseButton1Click:Connect(function()
+                performTeleport()
+            end)
+        else
+            if tpGui then tpGui:Destroy() end
+        end
+    end
+})
+
+GodTab:CreateSection("Etc")
+GodTab:CreateButton({
+    Name = "모든 서버플레이어 닉 복사",
+    Callback = function()
+        for _, p in ipairs(Players:GetPlayers()) do
+            print(p.Name .. " | " .. p.DisplayName)
+        end
+    end
+})
+
+GodTab:CreateSection("Movement & Utility")
+
+-- Fly
+local flySpeed = 100
+GodTab:CreateToggle({
+    Name = "플라이 (F)",
+    CurrentValue = false,
+    Callback = function(v)
+        if v then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() -- Infinite Yield Fly
+            Rayfield:Notify({Title = "Fly ON", Content = "Infinite Yield Fly 로드됨", Duration = 3})
+        end
+    end
+})
+
+-- High WalkSpeed
+GodTab:CreateToggle({
+    Name = "고속 이동",
+    CurrentValue = false,
+    Callback = function(v)
+        local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+        if hum then
+            hum.WalkSpeed = v and 100 or 16
+        end
+    end
+})
+
+-- Godmode (Health Lock + Anti Ragdoll)
+GodTab:CreateToggle({
+    Name = "갓모드(체력고정+안티 래그돌)",
+    CurrentValue = false,
+    Callback = function(v)
+        task.spawn(function()
+            while v and task.wait(0.2) do
+                local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+                if hum then
+                    hum.Health = 100
+                    hum.MaxHealth = 100
+                    if hum:FindFirstChild("Ragdolled") then
+                        hum.Ragdolled.Value = false
+                    end
+                end
+            end
+        end)
+    end
+})
+
+-- Anti Void
+GodTab:CreateToggle({
+    Name = "Anti Void",
+    CurrentValue = true,
+    Callback = function(v)
+        if v then
+            workspace.FallenPartsDestroyHeight = -999999
+        else
+            workspace.FallenPartsDestroyHeight = -100
+        end
+    end
+})
+
+GodTab:CreateSection("Extra")
+
+GodTab:CreateButton({
+    Name = "현재 위치 복사",
+    Callback = function()
+        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            setclipboard(tostring(hrp.CFrame))
+            Rayfield:Notify({Title = "📋", Content = "CFrame 복사됨", Duration = 2})
+        end
+    end
+})
+
+GodTab:CreateButton({
+    Name = "모두 Kill (로컬)",
+    Callback = function()
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p \~= plr and p.Character and p.Character:FindFirstChild("Humanoid") then
+                p.Character.Humanoid.Health = 0
+            end
+        end
+    end
+})
+
+
+print("GodMode Tab Loaded")
 -- 토글 (스크립트 로드 시 자동 ON)
 DevTab:CreateToggle({
     Name = "Mobile Crosshair TP",
