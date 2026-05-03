@@ -7883,7 +7883,7 @@ local AntiGrabSticky = antiTab:CreateToggle({
         end
     end
 })
-
+AntiGrabSticky:Set(true)
 
 local AntiRelease = antiTab:CreateToggle({
     Name = "안티 인풋(Network onwer)",
@@ -8043,28 +8043,6 @@ local AntiBlobUse = antiTab:CreateToggle({
         end
     end
 })
-antiTab:CreateSection("물리 방어 설정")
-
-antiTab:CreateToggle({
-    Name = "Fling 및 가속도 방어 활성화",
-    CurrentValue = false,
-    Flag = "AntiFlingToggle",
-    Callback = function(Value)
-        _G.AntiFlingEnabled = Value
-        
-                                    -- 낙하 속도 및 충돌 가속도를 초기화하여 fling 튕김 방지
-                                    hrp.Velocity = Vector3.new(0, 0, 0)
-                                    hrp.RotVelocity = Vector3.new(0, 0, 0)
-                                end
-                            end
-                        end
-                    end)
-                end
-            end)
-        end
-    end
-})
-
 
 antiTab:CreateSection("Kick | Toggle")
 local FlyingReset = antiTab:CreateToggle({
