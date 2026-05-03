@@ -7271,6 +7271,79 @@ local OwnerLoopKickToggle = LoopTab:CreateToggle({
         OwnerLoopKickF()
     end
 })
+    LoopTab:CreateSection("Owner Kick")
+    
+    local OLTPInput = LoopTab:CreateInput({
+        Name = "X Y Z",
+        CurrentValue = "0,30,0",
+        PlaceholderText = "",
+        RemoveTextAfterFocusLost = false,
+        Flag = "",
+        Callback = function(Value)
+            local x, y, z = string.match(Value, "([%d.-]+),([%d.-]+),([%d.-]+)")
+            if x and y and z then
+                OLTPValue = Vector3.new(tonumber(x), tonumber(y), tonumber(z))
+            else
+            end
+        end
+    })
+    OLTPInput:Set("0,30,0")
+    
+    local blobLoop4Toggle = LoopTab:CreateToggle({
+        Name = "루프 오너킥 [ 블롭맨없음 ]",
+        CurrentValue = false,
+        Flag = "21",
+        Callback = function(Value)
+            blobLoopT4 = Value
+            if blobLoopT4 then
+                table.clear(playersInLoop2V)
+                for i, e in ipairs(playersInLoop1V) do
+                    local nameOnly = e:match("^(.-) %(") or e
+                    table.insert(playersInLoop2V, nameOnly)
+                end
+                loopPlayerBlobF4()
+            else
+                blobLoopT4 = false
+                table.clear(playersInLoop2V)
+            end
+        end
+    })
+
+    local function loopPlayerBlobF4()
+        task.spawn(function()
+            while blobLoopT4 do
+                task.wait(0.001)
+                for _, name in ipairs(playersInLoop2V) do
+                    local foundPlr = Players:FindFirstChild(name)
+                    if foundPlr and foundPlr.Character then
+                        local char = foundPlr.Character
+                        local hrp = char:FindFirstChild("HumanoidRootPart")
+                        if hrp then
+                            hrp.CFrame = CFrame.new(cam.CFrame.p + OLTPValue)
+                        end
+                    end
+                end
+            end
+        end)
+    end
+
+    local function processPlayer(player)
+        if not player then return end
+        while blobLoopT4 do
+            if not player.Parent then
+                return
+            end
+            local character = player.Character
+            while blobLoopT4 and (not character or not character:FindFirstChild("Humanoid")) do
+                if not player.Parent then return end
+                task.wait(0.000000005)
+                character = player.Character
+            end
+            local charHUM = character and character:FindFirstChild("Humanoid")
+            if not charHUM then task.wait(0.0000000005) continue end
+            task.wait()
+        end
+    end
 
 LoopTab:CreateSection("Owner Kick")
 local OLTPInput = LoopTab:CreateInput({
