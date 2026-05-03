@@ -8057,18 +8057,7 @@ antiTab:CreateToggle({
         _G.AntiFlingEnabled = Value
         
         if Value then
-            print("물리 방어 시스템이 활성화되었습니다.")
-            
-            -- 방어 루프 실행
-            task.spawn(function()
-                while _G.AntiFlingEnabled do
-                    task.wait(0.2) -- 0.2초마다 실행
-                    
-                    pcall(function()
-                        local character = game:GetService("Players").LocalPlayer.Character
-                        if character then
-                            local hrp = character:FindFirstChild("HumanoidRootPart")
-                            if hrp then
+
                                 -- 낙하 속도 및 충돌 가속도를 0으로 초기화하여 Fling 튕김 방지
                                 hrp.Velocity = Vector3.new(0, 0, 0)
                                 hrp.RotVelocity = Vector3.new(0, 0, 0)
