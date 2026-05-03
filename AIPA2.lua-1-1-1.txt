@@ -1598,7 +1598,69 @@ local function toggleTPUI(state)
         if tpGui then tpGui:Destroy() tpGui = nil end
     end
 end
+-- ================== GOD MODE ==================
+local GodModeT = false
+local godModeConnections = {}
 
+function GodModeHandler(state)
+    -- 기존 연결 모두 정리
+    for _, conn in pairs(godModeConnections) do
+        pcall(function() conn:Disconnect() end)
+    end
+    godModeConnections = {}
+
+    if not state then return end
+
+    local function protectCharacter(char)
+        if not char then return end
+        
+        local humanoid = char:WaitForChild("Humanoid", 3)
+        if not humanoid then return end
+
+        -- 기본 설정
+        humanoid.MaxHealth = math.huge
+        humanoid.Health = math.huge
+        humanoid.BreakJointsOnDeath = false
+
+        -- 체력 무한 유지
+        local healthConn = humanoid.HealthChanged:Connect(function()
+            if GodModeT then
+                humanoid.Health = humanoid.MaxHealth
+            end
+        end)
+        table.insert(godModeConnections, healthConn)
+
+        -- 죽음 방지
+        local diedConn = humanoid.Died:Connect(function()
+            if GodModeT and char.Parent then
+                task.wait(0.1)
+                humanoid.Health = humanoid.MaxHealth
+            end
+        end)
+        table.insert(godModeConnections, diedConn)
+
+        -- 추가 보호 루프
+        local loopConn = task.spawn(function()
+            while GodModeT and char and char.Parent do
+                if humanoid then
+                    humanoid.Health = humanoid.MaxHealth
+                    humanoid.MaxHealth = math.huge
+                end
+                task.wait(0.1)
+            end
+        end)
+        table.insert(godModeConnections, loopConn)
+    end
+
+    -- 현재 캐릭터 보호
+    if plr.Character then
+        protectCharacter(plr.Character)
+    end
+
+    -- 리스폰 시 보호
+    local charAddedConn = plr.CharacterAdded:Connect(protectCharacter)
+    table.insert(godModeConnections, charAddedConn)
+end
 local RunService = game:GetService("RunService")
 local destroyCount = 0
 OwnerKickMODED = false
@@ -7794,7 +7856,31 @@ LoopTab:CreateButton({
         end
     end
 })
+antiTab:CreateSection("God Mode")
 
+local GodModeToggle = antiTab:CreateToggle({
+    Name = "갓모드 (God Mode)",
+    CurrentValue = false,
+    Flag = "GodMode",
+    Callback = function(Value)
+        GodModeT = Value
+        GodModeHandler(Value)
+        
+        if Value then
+            Rayfield:Notify({
+                Title = "🛡️ GOD MODE ON",
+                Content = "체력 무한 + 킬 방지 활성화",
+                Duration = 5
+            })
+        else
+            Rayfield:Notify({
+                Title = "🛡️ GOD MODE OFF",
+                Content = "갓모드가 해제되었습니다.",
+                Duration = 3
+            })
+        end
+    end
+})
 antiTab:CreateSection("Teleport | Toggle")
 local AntiGrabV1 = antiTab:CreateToggle({
     Name = "무질량 이동 | TP",
