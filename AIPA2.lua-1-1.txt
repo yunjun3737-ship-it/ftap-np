@@ -8075,7 +8075,29 @@ local FlyingReset = antiTab:CreateToggle({
             end)
         end
     end
-})
+local resetProtectionConn = nil
+
+resetProtectionConn = plr.CharacterAdded:Connect(function(char)
+    task.wait(0.7) -- 새 캐릭터 완전 로드 대기
+    
+    local hum = char:WaitForChild("Humanoid", 5)
+    if not hum then return end
+
+    -- 기본 보호
+    hum.MaxHealth = math.huge
+    hum.Health = math.huge
+    hum.BreakJointsOnDeath = false
+    hum.PlatformStand = false
+
+    -- 체력 무한 유지
+    hum.HealthChanged:Connect(function(health)
+        if health < hum.MaxHealth then
+            hum.Health = hum.MaxHealth
+        end
+    end)
+
+    print("🔄 새 캐릭터 보호 적용됨")
+end)
 FlyingReset:Set(true)
 
 local AntiKick = antiTab:CreateToggle({
