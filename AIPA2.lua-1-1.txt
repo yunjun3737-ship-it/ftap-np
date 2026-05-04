@@ -8045,10 +8045,12 @@ local AntiBlobUse = antiTab:CreateToggle({
 })
 
 antiTab:CreateSection("Kick | Toggle")
+-- ================== Kick Reset + Auto Protection ==================
 local flyingResetConn = nil
+local resetProtectionConn = nil
 
 local FlyingReset = antiTab:CreateToggle({
-    Name = "킥방지 리셋 (강화)",
+    Name = "킥 방지리셋",
     CurrentValue = false,
     Callback = function(Value)
         if flyingResetConn then
@@ -8060,43 +8062,38 @@ local FlyingReset = antiTab:CreateToggle({
             flyingResetConn = rs.GameCorrectionEvents.GameCorrectionsNotify.OnClientEvent:Connect(function(Type)
                 if Type == "Flying" then
                     local char = plr.Character
-                    if not char then return end
-                    
-                    local hum = char:FindFirstChildOfClass("Humanoid")
-                    local hrp = char:FindFirstChild("HumanoidRootPart")
-                    
-                    if hum and hrp then
-                        pcall(function() rs.CharacterEvents.Struggle:FireServer() end)
-                        hum.Health = 0
-                        hum:ChangeState(Enum.HumanoidStateType.Dead)
-                        char:BreakJoints()
+                    if char then
+                        local hum = char:FindFirstChildOfClass("Humanoid")
+                        if hum then
+                            pcall(function() rs.CharacterEvents.Struggle:FireServer() end)
+                            hum.Health = 0
+                            hum:ChangeState(Enum.HumanoidStateType.Dead)
+                            char:BreakJoints()
+                        end
                     end
                 end
             end)
         end
     end
-local resetProtectionConn = nil
+})
 
+-- Reset after protection (1 second delay)
 resetProtectionConn = plr.CharacterAdded:Connect(function(char)
-    task.wait(0.7) -- 새 캐릭터 완전 로드 대기
+    task.wait(1)
     
     local hum = char:WaitForChild("Humanoid", 5)
-    if not hum then return end
+    if hum then
+        hum.MaxHealth = math.huge
+        hum.Health = math.huge
+        hum.BreakJointsOnDeath = false
+        hum.PlatformStand = false
 
-    -- 기본 보호
-    hum.MaxHealth = math.huge
-    hum.Health = math.huge
-    hum.BreakJointsOnDeath = false
-    hum.PlatformStand = false
-
-    -- 체력 무한 유지
-    hum.HealthChanged:Connect(function(health)
-        if health < hum.MaxHealth then
-            hum.Health = hum.MaxHealth
-        end
-    end)
-
-    print("🔄 새 캐릭터 보호 적용됨")
+        hum.HealthChanged:Connect(function(health)
+            if health < hum.MaxHealth then
+                hum.Health = hum.MaxHealth
+            end
+        end)
+    end
 end)
 FlyingReset:Set(true)
 
