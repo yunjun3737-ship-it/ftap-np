@@ -8045,27 +8045,35 @@ local AntiBlobUse = antiTab:CreateToggle({
 })
 
 antiTab:CreateSection("Kick | Toggle")
+local flyingResetConn = nil
+
 local FlyingReset = antiTab:CreateToggle({
-    Name = "킥방지 리셋",
+    Name = "킥방지 리셋 (강화)",
     CurrentValue = false,
     Callback = function(Value)
+        if flyingResetConn then
+            flyingResetConn:Disconnect()
+            flyingResetConn = nil
+        end
 
-if Value then
-rs.GameCorrectionEvents.GameCorrectionsNotify.OnClientEvent:Connect(function(Type)
-if Type == "Flying" then
-
-char = plr.Character
-hum = char:FindFirstChildOfClass("Humanoid")
-hrp = char:FindFirstChildOfClass("HumanoidRootPart")
-
-rs.CharacterEvents.Struggle:FireServer()
-hum.Health = 0
-hum:ChangeState(Enum.HumanoidStateType.Dead)
-char:BreakJoints()
-
-end
-end)
-end
+        if Value then
+            flyingResetConn = rs.GameCorrectionEvents.GameCorrectionsNotify.OnClientEvent:Connect(function(Type)
+                if Type == "Flying" then
+                    local char = plr.Character
+                    if not char then return end
+                    
+                    local hum = char:FindFirstChildOfClass("Humanoid")
+                    local hrp = char:FindFirstChild("HumanoidRootPart")
+                    
+                    if hum and hrp then
+                        pcall(function() rs.CharacterEvents.Struggle:FireServer() end)
+                        hum.Health = 0
+                        hum:ChangeState(Enum.HumanoidStateType.Dead)
+                        char:BreakJoints()
+                    end
+                end
+            end)
+        end
     end
 })
 FlyingReset:Set(true)
