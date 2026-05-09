@@ -8498,6 +8498,94 @@ playerTab:CreateToggle({
         end
     end
 })
+playerTab:CreateSection("좆기능")
+
+-- 1. 
+playerTab:CreateToggle({
+    Name = "투명 모드",
+    CurrentValue = false,
+    Callback = function(Value)
+        TransparentT = Value
+        if Value then
+            task.spawn(function()
+                while TransparentT do
+                    pcall(function()
+                        local char = plr.Character
+                        if char then
+                            for _, part in pairs(char:GetChildren()) do
+                                if part:IsA("BasePart") and part.Name \~= "HumanoidRootPart" then
+                                    part.Transparency = 0.6
+                                end
+                            end
+                        end
+                    end)
+                    task.wait(0.4)
+                end
+            end)
+        end
+    end
+})
+
+-- 2. 
+playerTab:CreateButton({
+    Name = "캐릭터 리셋",
+    Callback = function()
+        if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+            plr.Character.Humanoid.Health = 0
+        end
+    end
+})
+
+-- 3. 
+playerTab:CreateToggle({
+    Name = "고속 회전 (스핀)",
+    CurrentValue = false,
+    Callback = function(Value)
+        SpinT = Value
+        if Value then
+            task.spawn(function()
+                while SpinT do
+                    local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+                    if hrp then
+                        hrp.CFrame *= CFrame.Angles(0, math.rad(25), 0)
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end
+})
+
+-- 4. 
+playerTab:CreateButton({
+    Name = "좌표 출력",
+    Callback = function()
+        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            print("현재 위치:", hrp.Position)
+        end
+    end
+})
+
+-- 5. 
+playerTab:CreateToggle({
+    Name = "자동 점프",
+    CurrentValue = false,
+    Callback = function(Value)
+        AutoJumpT = Value
+        if Value then
+            task.spawn(function()
+                while AutoJumpT do
+                    local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+                    if hum and hum:GetState() \~= Enum.HumanoidStateType.Jumping then
+                        hum:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end
+})
 --[[
 AuraTab:CreateToggle({
     Name = "테스트 아우라",
