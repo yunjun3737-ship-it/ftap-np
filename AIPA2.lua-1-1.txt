@@ -8444,7 +8444,96 @@ local flyInput = playerTab:CreateInput({
     end
 })
 flyInput:Set(80)
+playerTab:CreateSection("추가 유틸리티")
 
+-- 1. Server Hop (서버 이동)
+local ServerHop = playerTab:CreateButton({
+    Name = "서버 이동 (Server Hop)",
+    Callback = function()
+        Rayfield:Notify({Title = "🔄 Server Hop", Content = "새 서버로 이동합니다...", Duration = 3})
+        task.wait(1)
+        game:GetService("TeleportService"):Teleport(game.PlaceId, plr)
+    end
+})
+
+-- 2. Rejoin (재접속)
+local Rejoin = playerTab:CreateButton({
+    Name = "재접속 (Rejoin)",
+    Callback = function()
+        Rayfield:Notify({Title = "🔄 Rejoin", Content = "같은 서버로 다시 접속합니다.", Duration = 3})
+        task.wait(1)
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, plr)
+    end
+})
+
+-- 3. Hitbox Expander (히트박스 확대)
+local HitboxToggle = playerTab:CreateToggle({
+    Name = "히트박스 확대",
+    CurrentValue = false,
+    Callback = function(Value)
+        HitboxExpanderT = Value
+        if Value then
+            task.spawn(function()
+                while HitboxExpanderT do
+                    pcall(function()
+                        local char = plr.Character
+                        if char then
+                            for _, part in pairs(char:GetChildren()) do
+                                if part:IsA("BasePart") and part.Name \~= "HumanoidRootPart" then
+                                    part.Size = Vector3.new(5, 5, 5)  -- 크기 조절 가능
+                                end
+                            end
+                        end
+                    end)
+                    task.wait(0.5)
+                end
+            end)
+        end
+    end
+})
+
+-- 4. Remove Cooldowns (쿨타임 제거 - 일부 게임에서 작동)
+local NoCooldown = playerTab:CreateToggle({
+    Name = "쿨타임 제거",
+    CurrentValue = false,
+    Callback = function(Value)
+        NoCDT = Value
+        if Value then
+            Rayfield:Notify({Title = "⏰ No Cooldown", Content = "쿨타임 제거 활성화", Duration = 4})
+        end
+    end
+})
+
+-- 5. Better Fly (개선된 플라이 - 기존 Fly와 함께 사용 가능)
+local BetterFlyToggle = playerTab:CreateToggle({
+    Name = "고급 플라이 (Better Fly)",
+    CurrentValue = false,
+    Callback = function(Value)
+        BetterFlyT = Value
+        if Value then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/yunjun3737-ship-it/ap1/main/ap1"))()
+        end
+    end
+})
+ playerTab:CreateToggle({
+    Name = "안티 플링 (날아가지 않기)",
+    CurrentValue = true,
+    Callback = function(Value)
+        AntiFlingT = Value
+        if Value then
+            task.spawn(function()
+                while AntiFlingT do
+                    local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+                    if hrp then
+                        hrp.AssemblyLinearVelocity = Vector3.new(0,0,0)
+                        hrp.AssemblyAngularVelocity = Vector3.new(0,0,0)
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end
+})
 --[[
 AuraTab:CreateToggle({
     Name = "테스트 아우라",
