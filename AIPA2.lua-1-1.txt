@@ -8498,9 +8498,9 @@ playerTab:CreateToggle({
         end
     end
 })
-playerTab:CreateSection("좆기능")
+playerTab:CreateSection("강력 추천")
 
--- 1. 
+-- 1. 투명 모드 (안전하게 수정)
 playerTab:CreateToggle({
     Name = "투명 모드",
     CurrentValue = false,
@@ -8519,14 +8519,14 @@ playerTab:CreateToggle({
                             end
                         end
                     end)
-                    task.wait(0.4)
+                    task.wait(0.5)
                 end
             end)
         end
     end
 })
 
--- 2. 
+-- 2. 캐릭터 리셋
 playerTab:CreateButton({
     Name = "캐릭터 리셋",
     Callback = function()
@@ -8536,7 +8536,7 @@ playerTab:CreateButton({
     end
 })
 
--- 3. 
+-- 3. 고속 회전 (스핀) - 안전 버전
 playerTab:CreateToggle({
     Name = "고속 회전 (스핀)",
     CurrentValue = false,
@@ -8545,10 +8545,12 @@ playerTab:CreateToggle({
         if Value then
             task.spawn(function()
                 while SpinT do
-                    local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-                    if hrp then
-                        hrp.CFrame *= CFrame.Angles(0, math.rad(25), 0)
-                    end
+                    pcall(function()
+                        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+                        if hrp then
+                            hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(25), 0)
+                        end
+                    end)
                     task.wait()
                 end
             end)
@@ -8556,7 +8558,7 @@ playerTab:CreateToggle({
     end
 })
 
--- 4. 
+-- 4. 좌표 출력
 playerTab:CreateButton({
     Name = "좌표 출력",
     Callback = function()
@@ -8567,7 +8569,7 @@ playerTab:CreateButton({
     end
 })
 
--- 5. 
+-- 5. 자동 점프 - 안전 버전
 playerTab:CreateToggle({
     Name = "자동 점프",
     CurrentValue = false,
@@ -8576,11 +8578,13 @@ playerTab:CreateToggle({
         if Value then
             task.spawn(function()
                 while AutoJumpT do
-                    local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
-                    if hum and hum:GetState() \~= Enum.HumanoidStateType.Jumping then
-                        hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
-                    task.wait(0.1)
+                    pcall(function()
+                        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+                        if hum then
+                            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+                        end
+                    end)
+                    task.wait(0.2)
                 end
             end)
         end
