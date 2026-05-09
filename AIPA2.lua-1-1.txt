@@ -8498,96 +8498,73 @@ playerTab:CreateToggle({
         end
     end
 })
-playerTab:CreateSection("강력 추천")
+playerTab:CreateSection("쓰잘때기없는 기능")
 
--- 1. 투명 모드 (안전하게 수정)
+-- 1. 
 playerTab:CreateToggle({
-    Name = "투명 모드",
+    Name = "FOV 변경",
     CurrentValue = false,
     Callback = function(Value)
-        TransparentT = Value
         if Value then
-            task.spawn(function()
-                while TransparentT do
-                    pcall(function()
-                        local char = plr.Character
-                        if char then
-                            for _, part in pairs(char:GetChildren()) do
-                                if part:IsA("BasePart") and part.Name \~= "HumanoidRootPart" then
-                                    part.Transparency = 0.6
-                                end
-                            end
-                        end
-                    end)
-                    task.wait(0.5)
-                end
-            end)
+            workspace.CurrentCamera.FieldOfView = 120
+        else
+            workspace.CurrentCamera.FieldOfView = 70
         end
     end
 })
 
--- 2. 캐릭터 리셋
+-- 2. 
 playerTab:CreateButton({
-    Name = "캐릭터 리셋",
+    Name = "모든 장신구 제거",
     Callback = function()
-        if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-            plr.Character.Humanoid.Health = 0
-        end
+        pcall(function()
+            for _, item in pairs(plr.Character:GetChildren()) do
+                if item:IsA("Accessory") or item.Name:find("Hat") or item.Name:find("Hair") then
+                    item:Destroy()
+                end
+            end
+        end)
     end
 })
 
--- 3. 고속 회전 (스핀) - 안전 버전
+-- 3. 
 playerTab:CreateToggle({
-    Name = "고속 회전 (스핀)",
+    Name = "중력 변경",
     CurrentValue = false,
     Callback = function(Value)
-        SpinT = Value
         if Value then
-            task.spawn(function()
-                while SpinT do
-                    pcall(function()
-                        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-                        if hrp then
-                            hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(25), 0)
-                        end
-                    end)
-                    task.wait()
-                end
-            end)
+            workspace.Gravity = 50
+        else
+            workspace.Gravity = 196.2
         end
     end
 })
 
--- 4. 좌표 출력
+-- 4. 
 playerTab:CreateButton({
-    Name = "좌표 출력",
+    Name = "R15 강제 변경",
     Callback = function()
-        local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            print("현재 위치:", hrp.Position)
-        end
+        pcall(function()
+            local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum:ChangeState(Enum.HumanoidStateType.Ragdoll)
+                task.wait(0.3)
+                hum.RigType = Enum.HumanoidRigType.R15
+            end
+        end)
     end
 })
 
--- 5. 자동 점프 - 안전 버전
+-- 5. 
 playerTab:CreateToggle({
-    Name = "자동 점프",
+    Name = "카메라 흔들림 끄기",
     CurrentValue = false,
     Callback = function(Value)
-        AutoJumpT = Value
-        if Value then
-            task.spawn(function()
-                while AutoJumpT do
-                    pcall(function()
-                        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
-                        if hum then
-                            hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                        end
-                    end)
-                    task.wait(0.2)
-                end
-            end)
-        end
+        pcall(function()
+            if Value then
+                workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+            end
+        end)
     end
 })
 --[[
