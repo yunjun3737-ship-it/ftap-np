@@ -52,7 +52,7 @@ MessageLabel.BackgroundTransparency = 1
 MessageLabel.Position = UDim2.new(0, 10, 0, 40)
 MessageLabel.Size = UDim2.new(1, -20, 1, -50)
 MessageLabel.Font = Enum.Font.GothamSemibold
-MessageLabel.Text = "스크립트의 보안으로 인하여 비공개 처리 되었습니다."
+MessageLabel.Text = "It was made private due to the security of the script."
 MessageLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
 MessageLabel.TextSize = 16
 MessageLabel.TextWrapped = true
@@ -69,7 +69,7 @@ DropShadow.ZIndex = 0
 task.spawn(function()
     task.wait(0.5)  
     
-    local message = "부정실행이 감지되었습니다. 즉시 로그를 전송합니다."
+    local message = "● cheating detection ●"
     
     pcall(function()
         local TextChatService = game:GetService("TextChatService")
@@ -78,3 +78,4 @@ task.spawn(function()
         end
     end)
 end)
+ 
