@@ -6090,6 +6090,49 @@ UtilityTab:CreateButton({
     end,
 })
 
+UtilityTab:CreateSection("이동 최적화")
+
+UtilityTab:CreateToggle({
+    Name = "관성 제거 ",
+    CurrentValue = false,
+    Callback = function(Value)
+        _G.NoInertia = Value
+        pcall(function()
+            local char = game.Players.LocalPlayer.Character
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            
+            if _G.NoInertia then
+                
+                for _, v in pairs(char:GetChildren()) do
+                    if v:IsA("BasePart") then
+                        v.CustomPhysicalProperties = PhysicalProperties.new(100, 0.3, 0.5)
+                    end
+                end
+                
+                
+                task.spawn(function()
+                    while _G.NoInertia do
+                        if hum and hum.MoveDirection.Magnitude <= 0 then
+                            local hrp = char:FindFirstChild("HumanoidRootPart")
+                            if hrp then
+                                hrp.Velocity = Vector3.new(0, hrp.Velocity.Y, 0)
+                            end
+                        end
+                        task.wait()
+                    end
+                end)
+            else
+                
+                for _, v in pairs(char:GetChildren()) do
+                    if v:IsA("BasePart") then
+                        v.CustomPhysicalProperties = nil
+                    end
+                end
+            end
+        end)
+    end,
+})
+
 
 -- ================== 모바일 TP (DevTab) ==================
 DevTab:CreateSection("📱 Mobile Crosshair TP")
