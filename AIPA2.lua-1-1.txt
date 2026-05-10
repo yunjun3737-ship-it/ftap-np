@@ -36,6 +36,9 @@ local keybindTab = Window:CreateTab("설정", 0)
 --local CreditsTab = Window:CreateTab("나머지", 0)
 local DevTab = Window:CreateTab("잡기능", 0)
 local RankTab = Window:CreateTab("제작자 친구", 0)
+local UtilityTab = Window:CreateTab("유틸리티", 0)
+
+
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
 cam = workspace.CurrentCamera
@@ -1449,6 +1452,99 @@ function OwnerLoopKickF()
                 task.wait(0.08)  -- 속도 조절 (너무 빠르면 서버에서 막힘)
             end
         end)
+    end
+end
+----------------------------------------------------------------------------------------- [ 유틸리티 함수 ]
+
+
+local function SetHeadSize(size)
+    local char = plr.Character
+    if char and char:FindFirstChild("Head") then
+        char.Head.Size = Vector3.new(size, size, size)
+        char.Head.Massless = true
+    end
+end
+
+
+local function SetFOV(val)
+    workspace.CurrentCamera.FieldOfView = val
+end
+
+local function DisableGlobalShadows(val)
+    game:GetService("Lighting").GlobalShadows = not val
+end
+
+
+local function SetAnimSpeed(speed)
+    local char = plr.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if hum then
+        local anims = hum:GetPlayingAnimationTracks()
+        for _, track in pairs(anims) do
+            track:AdjustSpeed(speed)
+        end
+    end
+end
+
+
+local function FloorTransparency(val)
+    for _, part in pairs(workspace:GetDescendants()) do
+        if part:IsA("BasePart") and (part.Name:find("Floor") or part.Name:find("Plate")) then
+            part.Transparency = val
+        end
+    end
+end
+
+
+local function ShowServerInfo()
+    local upTime = math.floor(workspace.DistributedGameTime)
+    local hours = math.floor(upTime / 3600)
+    local mins = math.floor((upTime % 3600) / 60)
+    Rayfield:Notify({
+        Title = "서버 정보다ㅋ",
+        Content = string.format("현재 서버 구동 시간: %d시간 %d분", hours, mins),
+        Duration = 5
+    })
+end
+
+
+local function BigTool(val)
+    local char = plr.Character
+    if char then
+        local tool = char:FindFirstChildOfClass("Tool")
+        if tool and tool:FindFirstChild("Handle") then
+            tool.Handle.Size = val and Vector3.new(4, 4, 4) or Vector3.new(1, 1, 1)
+        end
+    end
+end
+
+
+local function ClearWater()
+    local terrain = workspace:FindFirstChildOfClass("Terrain")
+    if terrain then
+        terrain.WaterTransparency = 1
+        terrain.WaterWaveSize = 0
+    end
+end
+
+
+local function HideMyName(val)
+    local char = plr.Character
+    local head = char and char:FindFirstChild("Head")
+    if head then
+        local nametag = head:FindFirstChildOfClass("BillboardGui") or head:FindFirstChild("Nametag")
+        if nametag then nametag.Enabled = not val end
+    end
+end
+
+local function DropAllTools()
+    local char = plr.Character
+    for _, tool in pairs(plr.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = char
+            task.wait()
+            tool.Parent = workspace
+        end
     end
 end
 
@@ -5828,6 +5924,77 @@ end
 end
 
 ----------------------------------------------------------------------------------------- [ 시작 설정 ]
+UtilityTab:CreateSection("시각 및 환경")
+
+UtilityTab:CreateSlider({
+    Name = "시야각 (FOV) 조절v2",
+    Range = {30, 120},
+    Increment = 1,
+    CurrentValue = 70,
+    Callback = function(Value) SetFOV(Value) end,
+})
+
+UtilityTab:CreateToggle({
+    Name = "그림자 제거 (렉 줄임)",
+    CurrentValue = false,
+    Callback = function(Value) DisableGlobalShadows(Value) end,
+})
+
+UtilityTab:CreateToggle({
+    Name = "물 투명하게 만들기",
+    CurrentValue = false,
+    Callback = function() ClearWater() end,
+})
+
+UtilityTab:CreateSection("캐릭터 외형")
+
+UtilityTab:CreateSlider({
+    Name = "머리 크기 조절",
+    Range = {1, 10},
+    Increment = 0.5,
+    CurrentValue = 1,
+    Callback = function(Value) SetHeadSize(Value) end,
+})
+
+UtilityTab:CreateSlider({
+    Name = "애니메이션 속도",
+    Range = {0, 10},
+    Increment = 0.1,
+    CurrentValue = 1,
+    Callback = function(Value) SetAnimSpeed(Value) end,
+})
+
+UtilityTab:CreateToggle({
+    Name = "내 닉네임 숨기기",
+    CurrentValue = false,
+    Callback = function(Value) HideMyName(Value) end,
+})
+
+UtilityTab:CreateSection("서버 및 아이템")
+
+UtilityTab:CreateButton({
+    Name = "현재서버 정보 확인",
+    Callback = function() ShowServerInfo() end,
+})
+
+UtilityTab:CreateToggle({
+    Name = "히트박스 증가",
+    CurrentValue = false,
+    Callback = function(Value) BigTool(Value) end,
+})
+
+UtilityTab:CreateButton({
+    Name = "모든 도구 바닥에 버리기",
+    Callback = function() DropAllTools() end,
+})
+
+UtilityTab:CreateSlider({
+    Name = "바닥 투명도 바꾸기",
+    Range = {0, 1},
+    Increment = 0.1,
+    CurrentValue = 0,
+    Callback = function(Value) FloorTransparency(Value) end,
+})
 
 -- ================== 모바일 TP (DevTab) ==================
 DevTab:CreateSection("📱 Mobile Crosshair TP")
