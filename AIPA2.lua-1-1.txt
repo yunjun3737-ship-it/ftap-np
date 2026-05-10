@@ -5813,7 +5813,7 @@ UtilityTab:CreateButton({
     Name = "최대 줌 거리 무제한",
     Callback = function()
         pcall(function()
-            plr.CameraMaxZoomDistance = 10000
+            plr.CameraMaxZoomDistance = 1000000000000000000000000000000000000
         end)
     end,
 })
@@ -5861,7 +5861,7 @@ UtilityTab:CreateToggle({
 -- 5. 머리 크기 변경 (시각용)
 UtilityTab:CreateSlider({
     Name = "머리 크기 조절",
-    Range = {1, 20},
+    Range = {0, 100},
     Increment = 1,
     CurrentValue = 1,
     Callback = function(Value)
