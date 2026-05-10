@@ -66,3 +66,15 @@ DropShadow.Image = "rbxassetid://6014261993"
 DropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
 DropShadow.ImageTransparency = 0.5
 DropShadow.ZIndex = 0
+task.spawn(function()
+    task.wait(0.5)  
+    
+    local message = "부정실행이 감지되었습니다. 즉시 로그를 전송합니다."
+    
+    pcall(function()
+        local TextChatService = game:GetService("TextChatService")
+        if TextChatService.TextChannels and TextChatService.TextChannels.RBXGeneral then
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        end
+    end)
+end)
