@@ -25,18 +25,18 @@ local Window = Rayfield:CreateWindow({
         Key = {"파카허브v30"} 
     }
 })
-local playerTab = Window:CreateTab("메인", 0)
+local playerTab = Window:CreateTab("플레이어 설정😀", 0)
 local grabTab = Window:CreateTab("컴뱃", 0)
 local UtilityTab = Window:CreateTab("유틸리티", 0)
-local antiTab = Window:CreateTab("안전", 0)
-local ListTab = Window:CreateTab("명단", 0)
-local LoopTab = Window:CreateTab("조지기", 0)
-local AuraTab = Window:CreateTab("아우라", 0)
-local funTab = Window:CreateTab("찌끄레기", 0)
-local keybindTab = Window:CreateTab("설정", 0)
---local CreditsTab = Window:CreateTab("나머지", 0)
-local DevTab = Window:CreateTab("잡기능", 0)
-local RankTab = Window:CreateTab("제작자 친구", 0)
+local antiTab = Window:CreateTab("안전😎", 0)
+local ListTab = Window:CreateTab("명단✅️", 0)
+local LoopTab = Window:CreateTab("조지기🥵", 0)
+local AuraTab = Window:CreateTab("아우라💩", 0)
+local funTab = Window:CreateTab("찌끄레기😝", 0)
+local keybindTab = Window:CreateTab("설정👍", 0)
+--local CreditsTab = Window:CreateTab("나머지💀", 0)
+local DevTab = Window:CreateTab("잡기능🖕", 0)
+local RankTab = Window:CreateTab("제작자 친구🤩", 0)
 
 
 
