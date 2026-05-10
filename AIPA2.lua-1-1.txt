@@ -5938,6 +5938,158 @@ UtilityTab:CreateToggle({
 })
 
 
+UtilityTab:CreateSection("물리 및 엔진 조작")
+
+UtilityTab:CreateToggle({
+    Name = "무마찰 모드 (미끄러지기)",
+    CurrentValue = false,
+    Callback = function(Value)
+        pcall(function()
+            local char = game.Players.LocalPlayer.Character
+            for _, v in pairs(char:GetChildren()) do
+                if v:IsA("BasePart") then
+                    v.CustomPhysicalProperties = PhysicalProperties.new(Value and 0 or 0.7, 0.3, 0.5)
+                end
+            end
+        end)
+    end,
+})
+
+
+local clicking = false
+UtilityTab:CreateToggle({
+    Name = "자동 클릭 (마우스 왼쪽)",
+    CurrentValue = false,
+    Callback = function(Value)
+        clicking = Value
+        task.spawn(function()
+            while clicking do
+                pcall(function()
+                    local VirtualUser = game:GetService("VirtualUser")
+                    VirtualUser:CaptureController()
+                    VirtualUser:ClickButton1(Vector2.new(0, 0))
+                end)
+                task.wait(0.1)
+            end
+        end)
+    end,
+})
+
+
+UtilityTab:CreateButton({
+    Name = "모든 화면 효과 제거 (깔끔한 시야)",
+    Callback = function()
+        pcall(function()
+            local lighting = game:GetService("Lighting")
+            for _, v in pairs(lighting:GetChildren()) do
+                if v:IsA("PostProcessEffect") or v:IsA("BloomEffect") or v:IsA("BlurEffect") then
+                    v.Enabled = false
+                end
+            end
+        end)
+    end,
+})
+
+UtilityTab:CreateSection("플레이어 특수 조작")
+
+-- 4. 1인칭 강제 고정 (조준 시 유용)
+UtilityTab:CreateToggle({
+    Name = "강제 1인칭 시점",
+    CurrentValue = false,
+    Callback = function(Value)
+        pcall(function()
+            game.Players.LocalPlayer.CameraMode = Value and Enum.CameraMode.LockFirstPerson or Enum.CameraMode.Classic
+        end)
+    end,
+})
+
+
+UtilityTab:CreateSlider({
+    Name = "캐릭터 회전 민감도",
+    Range = {1, 10},
+    Increment = 1,
+    CurrentValue = 3,
+    Callback = function(Value)
+        pcall(function()
+            game.Players.LocalPlayer.Character.Humanoid.AutoRotate = true
+            
+        end)
+    end,
+})
+
+-- 6. 가짜 래그 (서버에 자신의 위치를 끊겨 보이게 함)
+local fakeLag = false
+UtilityTab:CreateToggle({
+    Name = "가짜 렉 (위치 끊기기)",
+    CurrentValue = false,
+    Callback = function(Value)
+        fakeLag = Value
+        task.spawn(function()
+            while fakeLag do
+                pcall(function()
+                    game:GetService("NetworkClient"):SetOutgoingKBPSLimit(1)
+                    task.wait(0.3)
+                    game:GetService("NetworkClient"):SetOutgoingKBPSLimit(9e9)
+                end)
+                task.wait(0.5)
+            end
+        end)
+    end,
+})
+
+UtilityTab:CreateSection("기타 유틸리티")
+
+
+UtilityTab:CreateToggle({
+    Name = "3D 렌더링 비활성화 (잠수용)",
+    CurrentValue = false,
+    Callback = function(Value)
+        pcall(function()
+            game:GetService("RunService"):Set3dRenderingEnabled(not Value)
+        end)
+    end,
+})
+
+
+UtilityTab:CreateButton({
+    Name = "현재 좌표 복사 (클립보드)",
+    Callback = function()
+        pcall(function()
+            local pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            setclipboard(tostring(pos))
+            Rayfield:Notify({Title="알림", Content="좌표가 복사되었습니다.", Duration=2})
+        end)
+    end,
+})
+
+
+UtilityTab:CreateButton({
+    Name = "맵 전체 오브젝트 개수 스캔",
+    Callback = function()
+        local count = #workspace:GetDescendants()
+        Rayfield:Notify({Title="스캔 완료", Content="현재 맵에 "..count.."개의 물체가 있습니다.", Duration=3})
+    end,
+})
+
+
+UtilityTab:CreateButton({
+    Name = "서버훅v2",
+    Callback = function()
+        pcall(function()
+            local HttpService = game:GetService("HttpService")
+            local TPS = game:GetService("TeleportService")
+            local Servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"))
+            for _, s in pairs(Servers.data) do
+                if s.playing < s.maxPlayers and s.id ~= game.JobId then
+                    TPS:TeleportToPlaceInstance(game.PlaceId, s.id, game.Players.LocalPlayer)
+                    break
+                end
+            end
+        end)
+    end,
+})
+
+
 -- ================== 모바일 TP (DevTab) ==================
 DevTab:CreateSection("📱 Mobile Crosshair TP")
 
