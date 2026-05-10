@@ -1026,7 +1026,7 @@ function AutoGucciF()
 
              char = plr.Character
             if not char then
-                task.wait(0.1)
+                task.wait(0.2)
                 return 
             end
 
@@ -1051,9 +1051,9 @@ function AutoGucciF()
             task.spawn(ragdollLoopF)
             task.wait(0.3)
             --fireproximityprompt(seat)
-            --task.wait(0.1)
+            --task.wait(0.2)
             --hrp.Massless = false
-            --task.wait(0.1)
+            --task.wait(0.15)
             hrp.CFrame = OCF
 
             successCheck = true
@@ -1091,7 +1091,7 @@ function AutoGucciF()
                     pcall(function()
                         SetNetworkOwner:FireServer(blobHRP, hrp)
                     end)
-                    blobHRP.CFrame = CFrame.new(0, 99999, 0)
+                    blobHRP.CFrame = CFrame.new(0, 999999, 0)
                 end
 
                 task.wait()
@@ -1454,127 +1454,7 @@ function OwnerLoopKickF()
         end)
     end
 end
------------------------------------------------------------------------------------------ [ 유틸리티 함수 ]
 
-
-local function SetHeadSize(size)
-    local char = plr.Character
-    if char and char:FindFirstChild("Head") then
-        char.Head.Size = Vector3.new(size, size, size)
-        char.Head.Massless = true
-    end
-end
-
-
-local function SetFOV(val)
-    workspace.CurrentCamera.FieldOfView = val
-end
-
-local function DisableGlobalShadows(val)
-    game:GetService("Lighting").GlobalShadows = not val
-end
-
-
-local function SetAnimSpeed(speed)
-    local char = plr.Character
-    local hum = char and char:FindFirstChildOfClass("Humanoid")
-    if hum then
-        local anims = hum:GetPlayingAnimationTracks()
-        for _, track in pairs(anims) do
-            track:AdjustSpeed(speed)
-        end
-    end
-end
-
-
-local function FloorTransparency(val)
-    for _, part in pairs(workspace:GetDescendants()) do
-        if part:IsA("BasePart") and (part.Name:find("Floor") or part.Name:find("Plate")) then
-            part.Transparency = val
-        end
-    end
-end
-
-
-local function ShowServerInfo()
-    local upTime = math.floor(workspace.DistributedGameTime)
-    local hours = math.floor(upTime / 3600)
-    local mins = math.floor((upTime % 3600) / 60)
-    Rayfield:Notify({
-        Title = "서버 정보다ㅋ",
-        Content = string.format("현재 서버 구동 시간: %d시간 %d분", hours, mins),
-        Duration = 5
-    })
-end
-
-
-local function BigTool(val)
-    local char = plr.Character
-    if char then
-        local tool = char:FindFirstChildOfClass("Tool")
-        if tool and tool:FindFirstChild("Handle") then
-            tool.Handle.Size = val and Vector3.new(4, 4, 4) or Vector3.new(1, 1, 1)
-        end
-    end
-end
-
-
-local function ClearWater()
-    local terrain = workspace:FindFirstChildOfClass("Terrain")
-    if terrain then
-        terrain.WaterTransparency = 1
-        terrain.WaterWaveSize = 0
-    end
-end
-
-
-local function HideMyName(val)
-    local char = plr.Character
-    local head = char and char:FindFirstChild("Head")
-    if head then
-        local nametag = head:FindFirstChildOfClass("BillboardGui") or head:FindFirstChild("Nametag")
-        if nametag then nametag.Enabled = not val end
-    end
-end
-
-local function DropAllTools()
-    local char = plr.Character
-    for _, tool in pairs(plr.Backpack:GetChildren()) do
-        if tool:IsA("Tool") then
-            tool.Parent = char
-            task.wait()
-            tool.Parent = workspace
-        end
-    end
-end
-
-    for _, other in ipairs(game.Players:GetPlayers()) do
-        if other ~= plr then
-             invs = workspace:FindFirstChild(other.Name.."SpawnedInToys")
-             blob = invs and invs:FindFirstChild("CreatureBlobman")
-            if blob then
-                 seat = blob:FindFirstChildOfClass("VehicleSeat")
-                if seat then
-                    if seat.Occupant == nil then
-                        seat:Sit(humanoid)
-                        BLOBSIT = false
-                        return
-                    else
-                         targetPlr = game.Players:GetPlayerFromCharacter(seat.Occupant.Parent)
-                        if targetPlr then
-                            TP(targetPlr)
-                            task.wait(0.3)
-                            SetOwner(targetPlr)
-                            task.wait(0.05)
-                            seat:Sit(humanoid)
-                            BLOBSIT = false
-                            return
-                        end
-                    end
-                end
-            end
-        end
-    end
 -- ================== Fling Aura (파카용) ==================
 local FlingAuraT = false
 local FlingAuraConnection = nil
@@ -5924,77 +5804,139 @@ end
 end
 
 ----------------------------------------------------------------------------------------- [ 시작 설정 ]
-UtilityTab:CreateSection("시각 및 환경")
+-- ================== [ 유틸리티 기능 ] ==================
 
-UtilityTab:CreateSlider({
-    Name = "시야각 (FOV) 조절v2",
-    Range = {30, 120},
-    Increment = 1,
-    CurrentValue = 70,
-    Callback = function(Value) SetFOV(Value) end,
+UtilityTab:CreateSection("환경 및 시야")
+
+-- 1. 줌 제한 해제
+UtilityTab:CreateButton({
+    Name = "최대 줌 거리 무제한",
+    Callback = function()
+        pcall(function()
+            plr.CameraMaxZoomDistance = 10000
+        end)
+    end,
 })
 
+-- 2. 안개 제거
+UtilityTab:CreateButton({
+    Name = "맵 안개 제거",
+    Callback = function()
+        pcall(function()
+            game:GetService("Lighting").FogEnd = 9e9
+        end)
+    end,
+})
+
+-- 3. 시간대 변경 (낮)
+UtilityTab:CreateButton({
+    Name = "서버 시간 낮으로 고정",
+    Callback = function()
+        pcall(function()
+            game:GetService("Lighting").ClockTime = 14
+        end)
+    end,
+})
+
+UtilityTab:CreateSection("캐릭터 비주얼")
+
+-- 4. 캐릭터 반투명화
 UtilityTab:CreateToggle({
-    Name = "그림자 제거 (렉 줄임)",
+    Name = "유령 모드 (반투명)",
     CurrentValue = false,
-    Callback = function(Value) DisableGlobalShadows(Value) end,
+    Callback = function(Value)
+        pcall(function()
+            local char = plr.Character
+            if char then
+                for _, v in pairs(char:GetChildren()) do
+                    if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+                        v.Transparency = Value and 0.5 or 0
+                    end
+                end
+            end
+        end)
+    end,
 })
 
-UtilityTab:CreateToggle({
-    Name = "물 투명하게 만들기",
-    CurrentValue = false,
-    Callback = function() ClearWater() end,
-})
-
-UtilityTab:CreateSection("캐릭터 외형")
-
+-- 5. 머리 크기 변경 (시각용)
 UtilityTab:CreateSlider({
     Name = "머리 크기 조절",
-    Range = {1, 10},
-    Increment = 0.5,
+    Range = {1, 20},
+    Increment = 1,
     CurrentValue = 1,
-    Callback = function(Value) SetHeadSize(Value) end,
+    Callback = function(Value)
+        pcall(function()
+            local head = plr.Character and plr.Character:FindFirstChild("Head")
+            if head then
+                head.Size = Vector3.new(Value, Value, Value)
+            end
+        end)
+    end,
 })
 
-UtilityTab:CreateSlider({
-    Name = "애니메이션 속도",
-    Range = {0, 10},
-    Increment = 0.1,
-    CurrentValue = 1,
-    Callback = function(Value) SetAnimSpeed(Value) end,
-})
-
+-- 6. 내 이름 숨기기 (로컬 전용)
 UtilityTab:CreateToggle({
-    Name = "내 닉네임 숨기기",
+    Name = "내 머리위 이름표 제거",
     CurrentValue = false,
-    Callback = function(Value) HideMyName(Value) end,
+    Callback = function(Value)
+        pcall(function()
+            local head = plr.Character and plr.Character:FindFirstChild("Head")
+            if head then
+                local bgui = head:FindFirstChildOfClass("BillboardGui")
+                if bgui then bgui.Enabled = not Value end
+            end
+        end)
+    end,
 })
 
-UtilityTab:CreateSection("서버 및 아이템")
+UtilityTab:CreateSection("시스템 유틸")
 
+-- 7. 핑 확인
 UtilityTab:CreateButton({
-    Name = "현재서버 정보 확인",
-    Callback = function() ShowServerInfo() end,
+    Name = "현재 핑(Ping) 확인",
+    Callback = function()
+        pcall(function()
+            local ping = math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())
+            Rayfield:Notify({Title = "시스템", Content = "현재 핑: "..ping.."ms", Duration = 3})
+        end)
+    end,
 })
 
+-- 8. 물리 렉 감소
+UtilityTab:CreateButton({
+    Name = "물리 렉 최적화",
+    Callback = function()
+        pcall(function()
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    v.Velocity = Vector3.new(0,0,0)
+                    v.RotVelocity = Vector3.new(0,0,0)
+                end
+            end
+        end)
+    end,
+})
+
+-- 9. 서버 인원수 확인
+UtilityTab:CreateButton({
+    Name = "서버 총 인원수 확인",
+    Callback = function()
+        local count = #game.Players:GetPlayers()
+        Rayfield:Notify({Title = "서버 정보", Content = "현재 인원: "..count.."명", Duration = 3})
+    end,
+})
+
+-- 10. 채팅창 숨기기/보이기
 UtilityTab:CreateToggle({
-    Name = "히트박스 증가",
+    Name = "채팅 UI 숨기기",
     CurrentValue = false,
-    Callback = function(Value) BigTool(Value) end,
+    Callback = function(Value)
+        pcall(function()
+            plr.PlayerGui.Chat.Frame.Visible = not Value
+        end)
+    end,
 })
 
-UtilityTab:CreateButton({
-    Name = "모든 도구 바닥에 버리기",
-    Callback = function() DropAllTools() end,
-})
-
-UtilityTab:CreateSlider({
-    Name = "바닥 투명도 바꾸기",
-    Range = {0, 1},
-    Increment = 0.1,
-    CurrentValue = 0,
-    Callback = function(Value) FloorTransparency(Value) end,
-})
 
 -- ================== 모바일 TP (DevTab) ==================
 DevTab:CreateSection("📱 Mobile Crosshair TP")
