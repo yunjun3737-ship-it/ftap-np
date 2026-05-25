@@ -5495,26 +5495,26 @@ pcall(function()
     end
 end)
 local Window = Rayfield:CreateWindow({
-    Name = "FTAP(반물사) | AIPA", 
+    Name = "FTAP | AIPA", 
     Icon = 0, 
     Theme = AP, 
     ToggleUIKeybind = "T",
     ConfigurationSaving = {
-        Enabled = true,        -- 저장 기능 완전 OFF
+        Enabled = true,       
         FolderName = nil,
         FileName = "NP_Config"
     }
 })
 
-local playerTab = Window:CreateTab("메인", 0)
-local grabTab = Window:CreateTab("그랩", 0)
-local antiTab = Window:CreateTab("보안", 0)
-local ListTab = Window:CreateTab("리스트", 0)
-local LoopTab = Window:CreateTab("실행", 0)
-local AuraTab = Window:CreateTab("아우라", 0)
-local funTab = Window:CreateTab("기타", 0)
-local keybindTab = Window:CreateTab("설정", 0)
---local CreditsTab = Window:CreateTab("이외", 0)
+local playerTab = Window:CreateTab("main", 0)
+local grabTab = Window:CreateTab("grab", 0)
+local antiTab = Window:CreateTab("anti", 0)
+local ListTab = Window:CreateTab("List", 0)
+local LoopTab = Window:CreateTab("blob", 0)
+local AuraTab = Window:CreateTab("arua", 0)
+local funTab = Window:CreateTab("fun", 0)
+local keybindTab = Window:CreateTab("Settings", 0)
+--local CreditsTab = Window:CreateTab("Credit", 0)
 local DevTab = Window:CreateTab("Dev", 0)
 
 DevTab:CreateSection("Gamepass")
@@ -5834,7 +5834,7 @@ DevTab:CreateButton({
     Name = "Fling [ Owner ]",
     Callback = function()
         table.clear(playersInLoop2V)
-        for i, e in ipairs(playersInLoop1V) do
+        f or i, e in ipairs(playersInLoop1V) do
             local nameOnly = e:match("^(.-) %(") or e
             table.insert(playersInLoop2V, nameOnly)
         end
@@ -6336,7 +6336,7 @@ if plr.UserId == 9078065998 then AddAll = true end
 if AddAll then
 SelectedList = nil
 local AddAllList = ListTab:CreateDropdown({
-    Name = "추가",
+    Name = "add",
     Options = {"블롭", "오너", "래그돌"},
     CurrentOption = {"OPEN"},
     MultipleOptions = false,
@@ -7824,7 +7824,7 @@ local VoidInput = funTab:CreateInput({
    Flag = "Input1",
    Callback = function(Text)
       local num = tonumber(Text)
-      if num then
+      if num the
          Value = num
       else
          Value = nil
@@ -7844,34 +7844,34 @@ local VoidButton = funTab:CreateButton({
 
 funTab:CreateSection("")
 local teleportLocations = {
-    ["스폰"] = {0, -7, 0},
-    ["스폰산"] = {494, 163, 175},
-    ["설산"] = {-394, 230, 509},
-    ["헛간(농지)"] = {-156, 59, -291},
-    ["위험구역"] = {125, -7, 241},
-    ["하늘섬"] = {63, 346, 309},
-    ["큰동굴"] = {-240, 29, 554},
-    ["작은동굴"] = {-84, 14, -310},
-    ["열차동굴"] = {602, 45, -175},
-    ["광산"] = {-308, -7, 506},
-    ["초록집"] = {-352, 98, 353},
-    ["(초록집)"] = {-532, -7, 92},
-    ["(분홍집)"] = {-484, -7, -165},
-    ["(보라집)"] = {249, -7, 461},
-    ["(파랑집)"] = {513, 83, -341},
-    ["(빨강집)"] = {551, 123, -73},
+    ["Spawn"] = {0, -7, 0},
+    ["Sponic acid "] = {494, 163, 175},
+    ["Snowy mountain "] = {-394, 230, 509},
+    ["barn (Farmland )"] = {-156, 59, -291},
+    ["danger zone "] = {125, -7, 241},
+    ["Sky Island"] = {63, 346, 309},
+    ["Great Cave"] = {-240, 29, 554},
+    ["small cave"] = {-84, 14, -310},
+    ["train cave"] = {602, 45, -175},
+    ["mine"] = {-308, -7, 506},
+    ["Green House"] = {-352, 98, 353},
+    ["(Green House)"] = {-532, -7, 92},
+    ["(Pink house)"] = {-484, -7, -165},
+    ["(Purple House)"] = {249, -7, 461},
+    ["(blue  House)"] = {513, 83, -341},
+    ["(Red House)"] = {551, 123, -73},
 }
 
-local selectedLocation = "스폰"
+local selectedLocation = "Spawn "
 
 local Dropdown = funTab:CreateDropdown({
     Name = "Select Zone",
-    Options = {"스폰","스폰산","광산","큰동굴","작은동굴","열차동굴","위험구역","설산","헛간(농지)","하늘섬","초록집","(초록집)","(분홍집)","(보라집)","(파랑집)","(빨강집)"},
-    CurrentOption = "스폰",
+    Options = {"Spawn ","Sponic acid ","mine","Great Cave","small cave","train cave","danger zone","Snowy mountain","Barn (farmland)","Sky Island ","green house ","(Green House )","(Pink house )","(Purple  House )","(blue  House )","(Red house )"},
+    CurrentOption = "Spawn",
     MultipleOptions = false,
     Callback = function(Value)
         if typeof(Value) == "table" then
-            selectedLocation = Value[1] or "스폰"
+            selectedLocation = Value[1] or "Spawn "
         else
             selectedLocation = Value
         end
@@ -8438,7 +8438,7 @@ keybindTab:CreateButton({
         Lighting.FogEnd = 3000
         Lighting.FogStart = 300
 
-        local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere", Lighting)
+        local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instanc e.new("Atmosphere", Lighting)
         atmosphere.Density = 0.357
         atmosphere.Offset = 0
         atmosphere.Color = Color3.fromRGB(165, 165, 165)
